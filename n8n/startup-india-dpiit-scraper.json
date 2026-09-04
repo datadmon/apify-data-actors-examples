@@ -1,0 +1,77 @@
+{
+  "name": "Startup India DPIIT Directory to Google Sheets",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "days"
+            }
+          ]
+        }
+      },
+      "name": "Daily",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "actor",
+        "operation": "run",
+        "actorId": "ege_daemon/startup-india-dpiit-scraper",
+        "input": "{\"states\": [\"Karnataka\"], \"includeProfile\": true, \"maxItems\": 100}",
+        "waitForFinish": true
+      },
+      "name": "Run Apify actor",
+      "type": "@apify/n8n-nodes-apify.apify",
+      "typeVersion": 1,
+      "position": [
+        260,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "dataset",
+        "operation": "getItems",
+        "datasetId": "={{ $json.defaultDatasetId }}"
+      },
+      "name": "Get dataset items",
+      "type": "@apify/n8n-nodes-apify.apify",
+      "typeVersion": 1,
+      "position": [
+        520,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Daily": {
+      "main": [
+        [
+          {
+            "node": "Run Apify actor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Run Apify actor": {
+      "main": [
+        [
+          {
+            "node": "Get dataset items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}
