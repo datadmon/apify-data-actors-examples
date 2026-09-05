@@ -23,7 +23,7 @@
       "parameters": {
         "resource": "actor",
         "operation": "run",
-        "actorId": "ege_daemon/hirist-jobs-scraper",
+        "actorId": "data_daemon/hirist-jobs-scraper",
         "input": "{\"queries\": [\"python developer\"], \"locations\": [\"Bangalore\"], \"postedWithinDays\": 7, \"maxJobsPerQuery\": 50}",
         "waitForFinish": true
       },

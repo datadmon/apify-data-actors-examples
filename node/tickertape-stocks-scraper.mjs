@@ -1,5 +1,5 @@
 // Tickertape India Stocks Scraper - NSE/BSE fundamentals, shareholding history, screener
-// Actor: https://apify.com/ege_daemon/tickertape-stocks-scraper
+// Actor: https://apify.com/data_daemon/tickertape-stocks-scraper
 // Install: npm i apify-client   |   Token: https://console.apify.com/settings/integrations
 import { ApifyClient } from 'apify-client';
 
@@ -14,7 +14,7 @@ const input = {
     ]
 };
 
-const run = await client.actor('ege_daemon/tickertape-stocks-scraper').call(input);
+const run = await client.actor('data_daemon/tickertape-stocks-scraper').call(input);
 const { items } = await client.dataset(run.defaultDatasetId).listItems();
 console.log(`${items.length} records`);
 console.log(JSON.stringify(items[0], null, 2));

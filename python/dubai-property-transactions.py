@@ -1,5 +1,5 @@
 """Dubai Property Transactions - Dubai Land Department sales, mortgages and gifts
-Actor: https://apify.com/ege_daemon/dubai-property-transactions
+Actor: https://apify.com/data_daemon/dubai-property-transactions
 Install: pip install apify-client   |   Token: https://console.apify.com/settings/integrations
 """
 import json
@@ -16,7 +16,7 @@ run_input = {
     "maxItems": 500
 }
 
-run = client.actor("ege_daemon/dubai-property-transactions").call(run_input=run_input)
+run = client.actor("data_daemon/dubai-property-transactions").call(run_input=run_input)
 items = list(client.dataset(run["defaultDatasetId"]).iterate_items())
 print(f"{len(items)} records")
 print(json.dumps(items[0], indent=2, ensure_ascii=False) if items else "no data")

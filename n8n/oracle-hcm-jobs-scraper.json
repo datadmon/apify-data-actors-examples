@@ -23,7 +23,7 @@
       "parameters": {
         "resource": "actor",
         "operation": "run",
-        "actorId": "ege_daemon/oracle-hcm-jobs-scraper",
+        "actorId": "data_daemon/oracle-hcm-jobs-scraper",
         "input": "{\"careerSiteUrls\": [\"https://eeho.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1/requisitions\"], \"keyword\": \"engineer\", \"postedWithinDays\": 30, \"maxJobsPerSite\": 100}",
         "waitForFinish": true
       },

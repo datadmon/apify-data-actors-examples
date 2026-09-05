@@ -23,7 +23,7 @@
       "parameters": {
         "resource": "actor",
         "operation": "run",
-        "actorId": "ege_daemon/dubai-property-transactions",
+        "actorId": "data_daemon/dubai-property-transactions",
         "input": "{\"fromDate\": \"2026-09-01\", \"toDate\": \"2026-09-07\", \"transactionGroup\": \"sales\", \"maxItems\": 500}",
         "waitForFinish": true
       },

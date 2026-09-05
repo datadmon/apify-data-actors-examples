@@ -23,7 +23,7 @@
       "parameters": {
         "resource": "actor",
         "operation": "run",
-        "actorId": "ege_daemon/india-ipo-tracker",
+        "actorId": "data_daemon/india-ipo-tracker",
         "input": "{\"reports\": [\"gmp\", \"subscription\"], \"category\": \"all\"}",
         "waitForFinish": true
       },

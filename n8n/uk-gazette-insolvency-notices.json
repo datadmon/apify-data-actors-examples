@@ -23,7 +23,7 @@
       "parameters": {
         "resource": "actor",
         "operation": "run",
-        "actorId": "ege_daemon/uk-gazette-insolvency-notices",
+        "actorId": "data_daemon/uk-gazette-insolvency-notices",
         "input": "{\"noticeTypes\": [\"2450\", \"2410\"], \"startPublishDate\": \"2026-09-01\", \"maxItems\": 100}",
         "waitForFinish": true
       },

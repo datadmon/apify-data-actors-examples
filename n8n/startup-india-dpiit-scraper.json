@@ -23,7 +23,7 @@
       "parameters": {
         "resource": "actor",
         "operation": "run",
-        "actorId": "ege_daemon/startup-india-dpiit-scraper",
+        "actorId": "data_daemon/startup-india-dpiit-scraper",
         "input": "{\"states\": [\"Karnataka\"], \"includeProfile\": true, \"maxItems\": 100}",
         "waitForFinish": true
       },

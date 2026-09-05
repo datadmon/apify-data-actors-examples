@@ -23,7 +23,7 @@
       "parameters": {
         "resource": "actor",
         "operation": "run",
-        "actorId": "ege_daemon/iimjobs-jobs-scraper",
+        "actorId": "data_daemon/iimjobs-jobs-scraper",
         "input": "{\"queries\": [\"product manager\"], \"postedWithinDays\": 15, \"maxJobsPerQuery\": 50}",
         "waitForFinish": true
       },

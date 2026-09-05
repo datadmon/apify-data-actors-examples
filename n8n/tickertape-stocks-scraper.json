@@ -23,7 +23,7 @@
       "parameters": {
         "resource": "actor",
         "operation": "run",
-        "actorId": "ege_daemon/tickertape-stocks-scraper",
+        "actorId": "data_daemon/tickertape-stocks-scraper",
         "input": "{\"mode\": \"stocks\", \"stocks\": [\"RELIANCE\", \"TCS\", \"HDFCBANK\"]}",
         "waitForFinish": true
       },
