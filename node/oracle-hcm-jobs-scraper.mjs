@@ -1,16 +1,18 @@
-// Oracle Cloud HCM Jobs Scraper - every requisition on any Oracle Recruiting career site
-// Actor: https://apify.com/data_daemon/oracle-hcm-jobs-scraper
+// Oracle HCM / Recruiting Cloud Jobs Scraper - every requisition on any Oracle Recruiting Cloud career site
+// Actor: https://apify.com/data_daemon/oracle-hcm-jobs-scraper  (id ADeJJ5VJCcUqYI87X)
 // Install: npm i apify-client   |   Token: https://console.apify.com/settings/integrations
+// Plain REST alternative (no SDK): see ../examples/run-sync/run_sync.mjs
 import { ApifyClient } from 'apify-client';
 
 const client = new ApifyClient({ token: process.env.APIFY_TOKEN });
 
 const input = {
     "careerSiteUrls": [
-        "https://eeho.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1/requisitions"
+        "https://eeho.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_45001/requisitions"
     ],
     "keyword": "engineer",
     "postedWithinDays": 30,
+    "includeDetails": true,
     "maxJobsPerSite": 100
 };
 

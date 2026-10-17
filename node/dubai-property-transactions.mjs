@@ -1,13 +1,12 @@
-// Dubai Property Transactions - Dubai Land Department sales, mortgages and gifts
-// Actor: https://apify.com/data_daemon/dubai-property-transactions
+// Dubai DLD Property Transactions - Dubai Land Department sales, mortgages and gifts with AED value and price/sqm
+// Actor: https://apify.com/data_daemon/dubai-property-transactions  (id fSoMCyHMdU0YHp4kk)
 // Install: npm i apify-client   |   Token: https://console.apify.com/settings/integrations
+// Plain REST alternative (no SDK): see ../examples/run-sync/run_sync.mjs
 import { ApifyClient } from 'apify-client';
 
 const client = new ApifyClient({ token: process.env.APIFY_TOKEN });
 
 const input = {
-    "fromDate": "2026-09-01",
-    "toDate": "2026-09-07",
     "transactionGroup": "sales",
     "maxItems": 500
 };

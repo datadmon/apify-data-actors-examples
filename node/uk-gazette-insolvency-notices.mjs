@@ -1,16 +1,16 @@
-// UK Gazette Insolvency Notices - winding-up petitions, administrations, liquidations
-// Actor: https://apify.com/data_daemon/uk-gazette-insolvency-notices
+// UK Gazette Insolvency Notices - winding-up petitions, administrations, liquidations from The Gazette
+// Actor: https://apify.com/data_daemon/uk-gazette-insolvency-notices  (id 4We8IBpLtJp6OkQd8)
 // Install: npm i apify-client   |   Token: https://console.apify.com/settings/integrations
+// Plain REST alternative (no SDK): see ../examples/run-sync/run_sync.mjs
 import { ApifyClient } from 'apify-client';
 
 const client = new ApifyClient({ token: process.env.APIFY_TOKEN });
 
 const input = {
     "noticeTypes": [
-        "2450",
-        "2410"
+        "2450"
     ],
-    "startPublishDate": "2026-09-01",
+    "includeLinkedData": true,
     "maxItems": 100
 };
 

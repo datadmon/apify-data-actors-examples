@@ -1,6 +1,7 @@
-"""Hirist Jobs Scraper - India IT jobs with full descriptions, salary, recruiter activity
-Actor: https://apify.com/data_daemon/hirist-jobs-scraper
+"""Hirist.tech Jobs Scraper - India IT and tech jobs with full descriptions, skills, salary when disclosed
+Actor: https://apify.com/data_daemon/hirist-jobs-scraper  (id z2fAtS4KgvaqkK85b)
 Install: pip install apify-client   |   Token: https://console.apify.com/settings/integrations
+Plain REST alternative (no SDK): see ../examples/run-sync/run_sync.py
 """
 import json
 import os
@@ -17,6 +18,7 @@ run_input = {
         "Bangalore"
     ],
     "postedWithinDays": 7,
+    "includeDescription": true,
     "maxJobsPerQuery": 50
 }
 

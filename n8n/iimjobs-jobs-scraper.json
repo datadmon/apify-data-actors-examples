@@ -1,17 +1,19 @@
 {
-  "name": "IIMJobs Scraper to Google Sheets",
+  "name": "IIMJobs Jobs Scraper to Google Sheets (daily)",
   "nodes": [
     {
       "parameters": {
         "rule": {
           "interval": [
             {
-              "field": "days"
+              "field": "days",
+              "triggerAtHour": 8
             }
           ]
         }
       },
-      "name": "Daily",
+      "id": "a1",
+      "name": "Every day 08:00",
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.2,
       "position": [
@@ -21,57 +23,102 @@
     },
     {
       "parameters": {
-        "resource": "actor",
-        "operation": "run",
-        "actorId": "data_daemon/iimjobs-jobs-scraper",
-        "input": "{\"queries\": [\"product manager\"], \"postedWithinDays\": 15, \"maxJobsPerQuery\": 50}",
-        "waitForFinish": true
+        "method": "POST",
+        "url": "https://api.apify.com/v2/acts/data_daemon~iimjobs-jobs-scraper/run-sync-get-dataset-items?clean=1",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\"queries\": [\"product manager\"], \"locations\": [\"Bangalore\", \"Mumbai\"], \"postedWithinDays\": 7, \"includeDescription\": true, \"maxJobsPerQuery\": 50}",
+        "options": {
+          "timeout": 300000,
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          }
+        }
       },
-      "name": "Run Apify actor",
-      "type": "@apify/n8n-nodes-apify.apify",
-      "typeVersion": 1,
+      "id": "a2",
+      "name": "Run IIMJobs Jobs Scraper",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
       "position": [
         260,
         0
-      ]
+      ],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "REPLACE_WITH_YOUR_CREDENTIAL_ID",
+          "name": "Apify token (Header Auth: name=Authorization, value=Bearer <token>)"
+        }
+      }
     },
     {
       "parameters": {
-        "resource": "dataset",
-        "operation": "getItems",
-        "datasetId": "={{ $json.defaultDatasetId }}"
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "mode": "url",
+          "value": "https://docs.google.com/spreadsheets/d/REPLACE_WITH_YOUR_SHEET_ID/edit"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Sheet1"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": []
+        },
+        "options": {}
       },
-      "name": "Get dataset items",
-      "type": "@apify/n8n-nodes-apify.apify",
-      "typeVersion": 1,
+      "id": "a3",
+      "name": "Append to Google Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
       "position": [
         520,
         0
-      ]
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "REPLACE_WITH_YOUR_CREDENTIAL_ID",
+          "name": "Google Sheets account"
+        }
+      }
     }
   ],
   "connections": {
-    "Daily": {
+    "Every day 08:00": {
       "main": [
         [
           {
-            "node": "Run Apify actor",
+            "node": "Run IIMJobs Jobs Scraper",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "Run Apify actor": {
+    "Run IIMJobs Jobs Scraper": {
       "main": [
         [
           {
-            "node": "Get dataset items",
+            "node": "Append to Google Sheets",
             "type": "main",
             "index": 0
           }
         ]
       ]
     }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "meta": {
+    "templateCredsSetupCompleted": false
   }
 }

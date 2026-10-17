@@ -1,6 +1,7 @@
-"""India IPO Tracker - IPO GMP, live subscription, listing performance, calendar
-Actor: https://apify.com/data_daemon/india-ipo-tracker
+"""India IPO Tracker - live IPO GMP, QIB/NII/retail subscription, calendar, listing data
+Actor: https://apify.com/data_daemon/india-ipo-tracker  (id Q8tYzzX5YLgPLbQu4)
 Install: pip install apify-client   |   Token: https://console.apify.com/settings/integrations
+Plain REST alternative (no SDK): see ../examples/run-sync/run_sync.py
 """
 import json
 import os
