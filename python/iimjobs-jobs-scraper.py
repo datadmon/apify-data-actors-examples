@@ -11,16 +11,11 @@ from apify_client import ApifyClient
 client = ApifyClient(os.environ["APIFY_TOKEN"])
 
 run_input = {
-    "queries": [
-        "product manager"
-    ],
-    "locations": [
-        "Bangalore",
-        "Mumbai"
-    ],
-    "postedWithinDays": 7,
-    "includeDescription": true,
-    "maxJobsPerQuery": 50
+    'queries': ['product manager'],
+    'locations': ['Bangalore', 'Mumbai'],
+    'postedWithinDays': 7,
+    'includeDescription': True,
+    'maxJobsPerQuery': 50,
 }
 
 run = client.actor("data_daemon/iimjobs-jobs-scraper").call(run_input=run_input)

@@ -11,7 +11,7 @@ const input = {
         "2450"
     ],
     "includeLinkedData": true,
-    "maxItems": 100
+    "maxItems": 40
 };
 
 const run = await client.actor('data_daemon/uk-gazette-insolvency-notices').call(input);

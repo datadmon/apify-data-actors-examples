@@ -11,8 +11,8 @@ from apify_client import ApifyClient
 client = ApifyClient(os.environ["APIFY_TOKEN"])
 
 run_input = {
-    "transactionGroup": "sales",
-    "maxItems": 500
+    'transactionGroup': 'sales',
+    'maxItems': 500,
 }
 
 run = client.actor("data_daemon/dubai-property-transactions").call(run_input=run_input)

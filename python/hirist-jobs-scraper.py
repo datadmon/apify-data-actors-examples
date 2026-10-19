@@ -11,15 +11,11 @@ from apify_client import ApifyClient
 client = ApifyClient(os.environ["APIFY_TOKEN"])
 
 run_input = {
-    "queries": [
-        "python developer"
-    ],
-    "locations": [
-        "Bangalore"
-    ],
-    "postedWithinDays": 7,
-    "includeDescription": true,
-    "maxJobsPerQuery": 50
+    'queries': ['python developer'],
+    'locations': ['Bangalore'],
+    'postedWithinDays': 7,
+    'includeDescription': True,
+    'maxJobsPerQuery': 50,
 }
 
 run = client.actor("data_daemon/hirist-jobs-scraper").call(run_input=run_input)

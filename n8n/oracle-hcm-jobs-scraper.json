@@ -29,7 +29,7 @@
         "genericAuthType": "httpHeaderAuth",
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "{\"careerSiteUrls\": [\"https://eeho.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_45001/requisitions\"], \"keyword\": \"engineer\", \"postedWithinDays\": 30, \"includeDetails\": true, \"maxJobsPerSite\": 100}",
+        "jsonBody": "{\"careerSiteUrls\": [\"https://eeho.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_45001/requisitions\"], \"keyword\": \"engineer\", \"postedWithinDays\": 30, \"includeDetails\": true, \"maxJobsPerSite\": 50}",
         "options": {
           "timeout": 300000,
           "response": {

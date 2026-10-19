@@ -11,11 +11,9 @@ from apify_client import ApifyClient
 client = ApifyClient(os.environ["APIFY_TOKEN"])
 
 run_input = {
-    "noticeTypes": [
-        "2450"
-    ],
-    "includeLinkedData": true,
-    "maxItems": 100
+    'noticeTypes': ['2450'],
+    'includeLinkedData': True,
+    'maxItems': 40,
 }
 
 run = client.actor("data_daemon/uk-gazette-insolvency-notices").call(run_input=run_input)

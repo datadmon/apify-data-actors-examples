@@ -46,15 +46,15 @@ Out of scope: Naukri/LinkedIn/Indeed, Workday/Taleo/Greenhouse sites, non-Indian
 
 ## Daily feeds
 
-IIMJobs/Hirist: `postedWithinDays: 1`, and when the live schema has them `onlyNewJobs: true` (actor remembers delivered jobs per search in the user's account; skipped jobs are free) or `skipJobIds: [...]`. Ready scripts: `examples/only-new-jobs/` (Python, Node) and `n8n/iimjobs-new-jobs-to-google-sheets-and-slack.json`. For other actors use a date filter (`startPublishDate`, `fromDate`) or `postedWithinDays: 7` on Oracle and de-duplicate on the id field.
+IIMJobs/Hirist: `postedWithinDays: 1`, and when the live schema has them `onlyNewSinceLastRun: true` (actor remembers delivered jobs per search in the user's account; skipped jobs are free) or `skipJobIds: [...]`. Ready scripts: `examples/only-new-jobs/` (Python, Node) and `n8n/iimjobs-new-jobs-to-google-sheets-and-slack.json`. For other actors use a date filter (`startPublishDate`, `fromDate`) or `postedWithinDays: 7` on Oracle and de-duplicate on the id field.
 
 ## Verified input examples (2026-10-18)
 
 ```json
 {"queries":["product manager"],"locations":["Bangalore","Mumbai"],"postedWithinDays":7,"includeDescription":true,"maxJobsPerQuery":50}
-{"careerSiteUrls":["https://eeho.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_45001/requisitions"],"keyword":"engineer","postedWithinDays":30,"maxJobsPerSite":100}
+{"careerSiteUrls":["https://eeho.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_45001/requisitions"],"keyword":"engineer","postedWithinDays":30,"maxJobsPerSite":50}
 {"reports":["gmp","subscription"],"category":"all"}
 {"mode":"index","indexSid":"NIFTY 50"}
 {"transactionGroup":"sales","maxItems":500}
-{"noticeTypes":["2450"],"includeLinkedData":true,"maxItems":100}
+{"noticeTypes":["2450"],"includeLinkedData":true,"maxItems":40}
 ```

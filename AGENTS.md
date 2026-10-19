@@ -38,7 +38,7 @@ Other routes: Apify MCP server `https://mcp.apify.com?tools=data_daemon/iimjobs-
 Rules of thumb:
 - **Size the cost first**: records x price per event. Cap with `maxJobs`, `maxJobsPerSite`, `maxItems`. Tell the user the estimate when it is above about $1.
 - **Turn off detail fetching when the user only needs counts or titles** (`includeDescription`, `includeDetails`, `includeLinkedData`, `includeIpoDetails` are on by default on the actors that have them and double the per-record price).
-- **Daily feeds**: for IIMJobs/Hirist set `postedWithinDays: 1` and, if the live schema has it, `onlyNewJobs: true` (actor-side memory per search, skipped jobs not charged) or `skipJobIds: [...]`. Always de-duplicate on `id` client-side too.
+- **Daily feeds**: for IIMJobs/Hirist set `postedWithinDays: 1` and, if the live schema has it, `onlyNewSinceLastRun: true` (actor-side memory per search, skipped jobs not charged) or `skipJobIds: [...]`. Always de-duplicate on `id` client-side too.
 - **Never fill gaps**: salaries are hidden on most Indian postings (`salaryHidden: true`); report the count of disclosed salaries next to any statistic.
 - **Run-sync limit**: 300 s. Full-board exports and big Oracle tenants (JPMC has 7,000+ open jobs) need the async pattern.
 
@@ -73,7 +73,7 @@ Input (verified: `{"queries":["product manager"],"postedWithinDays":7,"maxJobsPe
 | `postedWithinDays` int | 1, 3, 7, 15, 30; omit for all |
 | `includeDescription` bool (default true) | full JD text + HTML and company profile; +$0.002 per job |
 | `maxJobsPerQuery` int (default 40), `maxJobs` int (0 = no cap) | cost caps |
-| `onlyNewJobs` bool, `monitorKey` string, `resetMonitor` bool | monitor mode for schedules, in the latest builds; check the live schema |
+| `onlyNewSinceLastRun` bool, `stateKey` string, `skipJobIds` array | monitor mode and explicit exclusions; read the live schema |
 
 Output, one record per job: `id`, `site`, `url`, `title`, `designation`, `company` {`name`, `domain`, `logo`, `confidential`, `ambitionBoxRating`, `ambitionBoxReviews`, `ambitionBoxUrl`, `about`}, `recruiter` {`designation`; `name` only where the board shows it publicly, otherwise masked}, `experienceMinYears`, `experienceMaxYears`, `salaryMinLpa`, `salaryMaxLpa`, `salaryHidden`, `locations` [], `remote`, `skills` [], `mandatorySkills` [], `applicants`, `postedAt` (ISO), `description`, `descriptionHtml` (with `includeDescription`), `query`, `scrapedAt`.
 
@@ -122,7 +122,7 @@ Input (verified: Oracle CX_45001 with `"keyword":"engineer","maxJobsPerSite":3` 
 | `postedWithinDays` int | Oracle supports exactly 7 or 30 (other values round up) |
 | `workplaceTypes` string[] | `ORA_REMOTE`, `ORA_HYBRID`, `ORA_ON_SITE` |
 | `includeDetails` bool (default true) | full description, qualifications, responsibilities, flex fields; +$0.002 per job |
-| `maxJobsPerSite` int (default 100; 0 = all), `maxJobs` int | cost caps |
+| `maxJobsPerSite` int (default 50; 0 = all), `maxJobs` int | cost caps |
 
 Output, one record per requisition: `id`, `title`, `url`, `applyUrl`, `tenantHost`, `careerSite` {`origin`, `siteNumber`, `name`}, `postedDate`, `externalPostedStartDate`, `language`, `primaryLocation`, `country`, `locations` [], `remote`, `workplaceType`, `jobFunction`, `category`, `hotJob`, `trending`, `shortDescription`, and with `includeDetails`: `description`, `descriptionHtml`, `qualifications`, `responsibilities`, `corporateDescription`, `skills` [], `flexFields` {employer-defined, e.g. `Role`, `Job Type`}; plus `scrapedAt`. The employer name is `careerSite.name`.
 
@@ -201,7 +201,7 @@ Input (verified: `{"transactionGroup":"sales","maxItems":3}` → 3 rows; dates d
 | `propertyType` | `all`, `unit`, `building`, `land` |
 | `areaId` string | one DLD area id (each row carries its `areaId`) |
 | `includeArabic` bool | adds Arabic names |
-| `maxItems` int (default 2000; 0 = all in range) | a busy week has 5,000+ sales |
+| `maxItems` int (default 200; 0 = all in range) | a busy week has 5,000+ sales |
 
 Output, one record per transaction: `transactionNumber`, `transactionDate`, `transactionDateTime`, `group`, `groupId`, `procedure` (e.g. `Sell`, `Sell - Pre registration`, `Mortgage Registration`), `procedureId`, `usage`, `offPlan`, `freehold`, `area`, `areaId`, `project`, `masterProject`, `propertyType`, `propertySubType`, `rooms`, `parking`, `buildingAge`, `parcelId`, `propertyId`, `transactionValueAed`, `procedureAreaSqm`, `actualAreaSqm`, `pricePerSqmAed`, `nearestMetro`, `nearestMall`, `nearestLandmark`, `totalSellers`, `totalBuyers`, `source`, `scrapedAt`.
 
@@ -216,18 +216,18 @@ Use when: lists of companies facing winding-up petitions (incl. HMRC petitions),
 Input (verified: `{"noticeTypes":["2450"],"maxItems":3,"includeLinkedData":true}` → 3 rows):
 
 ```json
-{ "service": "insolvency", "noticeTypes": ["2450", "2451", "2410"], "startPublishDate": "2026-10-01", "text": "", "sortBy": "latest-date", "includeLinkedData": true, "maxItems": 200 }
+{ "service": "insolvency", "noticeTypes": ["2450", "2452", "2410"], "startPublishDate": "2026-10-01", "text": "", "sortBy": "latest-date", "includeLinkedData": true, "maxItems": 200 }
 ```
 
 | Field | Notes |
 |---|---|
 | `service` | `insolvency` (default), `companies`, `all-notices`, `wills-and-probate` |
-| `noticeTypes` string[] | Gazette codes: `2450` petitions to wind up, `2451` winding-up orders, `2432` resolutions for winding up, `2434` appointment of liquidators, `2410` administration appointments, `2433` meetings of creditors, `2436` notices to creditors, `2440` dissolution; omit for all types in the service |
+| `noticeTypes` string[] | Gazette codes: `2450` petitions to wind up, `2451` partnership winding-up petitions, `2452` winding-up orders, `2441` resolutions for winding up, `2432`/`2443` appointment of liquidators, `2410` administration appointments, `2442` meetings of creditors, `2433` notices to creditors; omit for all types in the service |
 | `categoryCode` string | e.g. `G205000000` corporate insolvency, `G206000000` personal insolvency |
 | `text` string | free text: company name, practitioner, town |
 | `startPublishDate` / `endPublishDate` `YYYY-MM-DD` | publication window |
 | `includeLinkedData` bool (default true) | adds the structured record (company number, addresses, court case, practitioners); +$0.003 per notice |
-| `maxItems` int (default 100) | cost cap |
+| `maxItems` int (default 40) | cost cap |
 
 Output, one record per notice: `noticeId`, `url`, `title`, `category`, `categories`, `noticeCode`, `noticeTypes`, `published`, `updated`, `publisher`, `status`, `summary`, `contentHtml`, `source`, `scrapedAt`; with `includeLinkedData`: `companyName`, `companyNumber`, `companyTypes`, `registeredOffice`, `principalTradingAddress`, `subjectType`, `dateOfHearing`, `dateOfPetitionPresentation`, `dateToRequestAppearance`, `practitioners` [{`name`, `type`, `firm`, `email`, `telephone`, `address`}], and the full `linkedData` object (petitioner under `linkedData.petitioner`, court and case under `linkedData.hasCourtCase.hasCourt.courtName` / `linkedData.hasCourtCase.caseCode`).
 

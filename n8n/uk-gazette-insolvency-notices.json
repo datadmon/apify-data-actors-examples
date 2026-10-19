@@ -29,7 +29,7 @@
         "genericAuthType": "httpHeaderAuth",
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "{\"noticeTypes\": [\"2450\"], \"includeLinkedData\": true, \"maxItems\": 100}",
+        "jsonBody": "{\"noticeTypes\": [\"2450\"], \"includeLinkedData\": true, \"maxItems\": 40}",
         "options": {
           "timeout": 300000,
           "response": {

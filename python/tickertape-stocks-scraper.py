@@ -11,8 +11,8 @@ from apify_client import ApifyClient
 client = ApifyClient(os.environ["APIFY_TOKEN"])
 
 run_input = {
-    "mode": "index",
-    "indexSid": "NIFTY 50"
+    'mode': 'index',
+    'indexSid': 'NIFTY 50',
 }
 
 run = client.actor("data_daemon/tickertape-stocks-scraper").call(run_input=run_input)

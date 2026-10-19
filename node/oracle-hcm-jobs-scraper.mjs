@@ -13,7 +13,7 @@ const input = {
     "keyword": "engineer",
     "postedWithinDays": 30,
     "includeDetails": true,
-    "maxJobsPerSite": 100
+    "maxJobsPerSite": 50
 };
 
 const run = await client.actor('data_daemon/oracle-hcm-jobs-scraper').call(input);

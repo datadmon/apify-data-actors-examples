@@ -45,7 +45,7 @@ curl -sS -X POST "https://api.apify.com/v2/acts/data_daemon~iimjobs-jobs-scraper
 
 ## Schedule it: only new jobs, every morning
 
-[`examples/only-new-jobs/`](examples/only-new-jobs/) is a daily loop for IIMJobs and Hirist that returns each job once. It reads the actor's live input schema and uses `onlyNewJobs` (actor-side memory in your own Apify account, skipped jobs are not charged) or `skipJobIds` when the build offers them, and always keeps a local seen-ids file as a safety net. Python and Node versions, cron and GitHub Actions snippets included.
+[`examples/only-new-jobs/`](examples/only-new-jobs/) is a daily loop for IIMJobs and Hirist that returns each job once. It reads the actor's live input schema and uses `onlyNewSinceLastRun` (actor-side memory in your own Apify account, skipped jobs are not charged) or `skipJobIds` when the build offers them, and always keeps a local seen-ids file as a safety net. Python and Node versions, cron and GitHub Actions snippets included.
 
 No-code alternative: in Apify Console, fill the input, *Save as task*, *Schedules → Create schedule* (daily), then in the task's *Integrations* tab add Google Sheets, Slack, a webhook, Make or Zapier.
 

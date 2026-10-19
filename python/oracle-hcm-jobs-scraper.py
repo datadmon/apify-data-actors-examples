@@ -11,13 +11,11 @@ from apify_client import ApifyClient
 client = ApifyClient(os.environ["APIFY_TOKEN"])
 
 run_input = {
-    "careerSiteUrls": [
-        "https://eeho.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_45001/requisitions"
-    ],
-    "keyword": "engineer",
-    "postedWithinDays": 30,
-    "includeDetails": true,
-    "maxJobsPerSite": 100
+    'careerSiteUrls': [   'https://eeho.fa.us2.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_45001/requisitions'],
+    'keyword': 'engineer',
+    'postedWithinDays': 30,
+    'includeDetails': True,
+    'maxJobsPerSite': 50,
 }
 
 run = client.actor("data_daemon/oracle-hcm-jobs-scraper").call(run_input=run_input)

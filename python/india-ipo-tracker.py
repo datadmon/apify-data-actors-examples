@@ -11,11 +11,8 @@ from apify_client import ApifyClient
 client = ApifyClient(os.environ["APIFY_TOKEN"])
 
 run_input = {
-    "reports": [
-        "gmp",
-        "subscription"
-    ],
-    "category": "all"
+    'reports': ['gmp', 'subscription'],
+    'category': 'all',
 }
 
 run = client.actor("data_daemon/india-ipo-tracker").call(run_input=run_input)
