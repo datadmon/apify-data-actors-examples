@@ -21,6 +21,8 @@ Every actor reads a site's own JSON endpoints, so runs take seconds, need no pro
 | [Luma Events Scraper](https://apify.com/data_daemon/luma-events-scraper) | lu.ma events by city, category, keyword or calendar: dates, venue, tickets, hosts | `51GnTTp3L9zzrKcb7` | [python](python/luma-events-scraper.py) · [node](node/luma-events-scraper.mjs) · [n8n](n8n/luma-events-scraper.json) |
 <!-- actors:end -->
 
+Guides and a page per API with live prices: https://datadmon.github.io/ (machine-readable index: https://datadmon.github.io/llms.txt).
+
 The hex id and `data_daemon/<name>` are interchangeable everywhere in the Apify API (write the name as `data_daemon~<name>` inside URLs).
 
 ## Quick start (SDK)
