@@ -5,6 +5,7 @@ each run prints only the jobs it has not delivered before. Standard library only
     python only_new_jobs.py                                  # IIMJobs, "product manager", last 1 day
     python only_new_jobs.py hirist "data engineer" "python developer"
     python only_new_jobs.py foundit "sales manager"
+    python only_new_jobs.py instahyre "python" "golang"
 
 How the de-duplication works (checked against the actor's live input schema on every run, so this script is
 correct whichever build is deployed):
@@ -24,7 +25,8 @@ import urllib.request
 API = "https://api.apify.com/v2"
 HEADERS = {"Authorization": f"Bearer {os.environ['APIFY_TOKEN']}", "Content-Type": "application/json"}
 ACTORS = {"iimjobs": "data_daemon~iimjobs-jobs-scraper", "hirist": "data_daemon~hirist-jobs-scraper",
-          "foundit": "data_daemon~foundit-jobs-scraper"}  # ids fEBnL9mUQr81TGuh4, z2fAtS4KgvaqkK85b, UdAJvB5H72gNbfQfM
+          "foundit": "data_daemon~foundit-jobs-scraper", "instahyre": "data_daemon~instahyre-jobs-scraper"}
+# ids fEBnL9mUQr81TGuh4, z2fAtS4KgvaqkK85b, UdAJvB5H72gNbfQfM, GMe0nzJEhMj9PV8Mb
 MONITOR_FLAGS = ("onlyNewSinceLastRun", "onlyNewJobs")  # boolean: actor-side memory of delivered jobs
 STATE_KEY_FIELDS = ("stateName", "stateKey", "monitorKey")  # string: name of this saved search's memory (current builds use stateName)
 SKIP_LIST_FIELDS = ("skipJobIds", "excludeJobIds")  # string[]: ids to leave out of this run

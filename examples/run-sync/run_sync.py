@@ -13,6 +13,7 @@ Actor ids (either form works in the URL; a slash in the name becomes a tilde):
     data_daemon/dubai-property-transactions   fSoMCyHMdU0YHp4kk
     data_daemon/uk-gazette-insolvency-notices 4We8IBpLtJp6OkQd8
     data_daemon/foundit-jobs-scraper          UdAJvB5H72gNbfQfM
+    data_daemon/instahyre-jobs-scraper        GMe0nzJEhMj9PV8Mb
     data_daemon/luma-events-scraper           51GnTTp3L9zzrKcb7
 """
 import json

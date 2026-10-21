@@ -9,6 +9,7 @@ Machine-readable notes for AI agents, coding assistants and MCP clients that nee
 | Indian management, MBA, finance, consulting, CA/CFA, sales, HR, senior roles; salary bands (when disclosed); applicant counts; who is hiring in India | `data_daemon/iimjobs-jobs-scraper` | Tech roles (use Hirist); Naukri/LinkedIn/Indeed (not covered) |
 | Indian software, data, DevOps, product-tech roles; skills demand; tech salary bands | `data_daemon/hirist-jobs-scraper` | Non-tech roles (use IIMJobs) |
 | Indian jobs across every function and level on foundit.in (Monster India): freshers, sales, BPO, nursing, accounting, operations, IT; applicant and view counts; employer vs staffing agency; apply links to employer career sites | `data_daemon/foundit-jobs-scraper` | Naukri/LinkedIn/Indeed (not covered); senior management and MBA roles (IIMJobs has deeper coverage) |
+| Indian tech jobs at product companies and startups on Instahyre (engineering, data, DevOps, product, design); company headcount, founding year and size band; work-from-home roles; hiring by company or company size | `data_daemon/instahyre-jobs-scraper` | Non-tech roles (IIMJobs, Foundit); salary bands (Instahyre does not publish pay); applicant counts (Hirist, IIMJobs) |
 | Every open job of one employer whose careers page is on Oracle Recruiting Cloud / Fusion HCM (`*.oraclecloud.com/hcmUI/CandidateExperience/...`): JPMorgan Chase, Marriott, Oracle, Kotak, DTCC and thousands more | `data_daemon/oracle-hcm-jobs-scraper` | Workday, Taleo, Greenhouse, Lever, SuccessFactors sites |
 | Indian IPOs: live grey market premium (GMP), QIB/NII/retail subscription, open/close/listing dates, mainboard vs SME, full IPO detail pages | `data_daemon/india-ipo-tracker` | Non-Indian IPOs; secondary-market prices (use Tickertape) |
 | NSE/BSE listed companies: index constituents (NIFTY 50/100/500, NIFTY BANK, SENSEX), ratio screener, full fundamentals profile per stock | `data_daemon/tickertape-stocks-scraper` | Intraday tick data; derivatives; mutual fund NAVs |
@@ -39,8 +40,8 @@ Other routes: Apify MCP server `https://mcp.apify.com?tools=data_daemon/iimjobs-
 
 Rules of thumb:
 - **Size the cost first**: records x price per event. Cap with `maxJobs`, `maxJobsPerSite`, `maxItems`, `maxEvents`. Tell the user the estimate when it is above about $1.
-- **Turn off detail fetching when the user only needs counts or titles** (`includeDescription`, `includeDetails`, `includeLinkedData`, `includeIpoDetails` are on by default on the actors that have them and double the per-record price on IIMJobs, Hirist, Oracle and Gazette; on Foundit and Luma they only change speed, not price).
-- **Daily feeds**: for IIMJobs/Hirist/Foundit set `postedWithinDays: 1` and, if the live schema has it, `onlyNewSinceLastRun: true` (actor-side memory per search, skipped jobs not charged; `stateName` names the search) or `skipJobIds: [...]`. Luma has the same `onlyNewSinceLastRun` / `stateName` plus `skipEventIds`. Always de-duplicate on `id` client-side too.
+- **Turn off detail fetching when the user only needs counts or titles** (`includeDescription`, `includeDetails`, `includeLinkedData`, `includeIpoDetails` are on by default on the actors that have them and double the per-record price on IIMJobs, Hirist, Oracle and Gazette; on Foundit, Instahyre and Luma they only change speed, not price).
+- **Daily feeds**: for IIMJobs/Hirist/Foundit/Instahyre set `postedWithinDays: 1` (on Instahyre the date is checked per job page, so prefer `onlyNewSinceLastRun` there) and, if the live schema has it, `onlyNewSinceLastRun: true` (actor-side memory per search, skipped jobs not charged; `stateName` names the search) or `skipJobIds: [...]`. Luma has the same `onlyNewSinceLastRun` / `stateName` plus `skipEventIds`. Always de-duplicate on `id` client-side too.
 - **Never fill gaps**: salaries are hidden on most Indian postings (`salaryHidden: true`); report the count of disclosed salaries next to any statistic.
 - **Run-sync limit**: 300 s. Full-board exports and big Oracle tenants (JPMC has 7,000+ open jobs) need the async pattern.
 
@@ -312,6 +313,46 @@ Input (verified 2026-10-21: `{"cities":["London"],"categories":["ai"],"daysAhead
 Output, one record per event: `id` (`evt-...`), `dedupKey`, `url`, `name`, `startAt`, `endAt` (UTC), `timezone`, `startAtLocal`, `endAtLocal`, `format` (`in-person` or `online`), `venue`, `address`, `city`, `region`, `country`, `countryCode`, `lat`, `lng`, `addressHidden` (venue shown only to registered guests: `venue` and `address` are null and coordinates are rounded to about 1 km), `isFree`, `price`, `maxPrice`, `currency`, `soldOut`, `spotsRemaining`, `nearCapacity`, `requireApproval`, `registration`, `waitlist`, `guestCount`, `eventType`, `seriesId`, `visibility`, `discoverCity`, `calendar` {`id`, `name`, `slug`, `url`, `description`, `avatarUrl`, `website`, `isVerified`, `isPersonal`, `twitter`, `instagram`, `linkedin`, `youtube`, `tiktok`, `city`, `country`}, `hosts` [{`id`, `name`, `bio`, `username`, `profileUrl`, `avatarUrl`, `website`, `linkedin`, `twitter`, `instagram`, `tiktok`, `youtube`, `isVerified`}], `hostNames` [], `categories` [], `coverUrl`, with `includeDetails`: `description`, `descriptionHtml`, `ticketTypes` [{`id`, `name`, `isFree`, `price`, `currency`, `description`, `capacity`, `spotsRemaining`, `requireApproval`, `validFrom`, `validUntil`}]; plus `source` {`type`, `name`} and `scrapedAt`. Guest lists, attendee names, e-mails and phone numbers are never collected.
 
 Cost: `event` $0.0015 with details included → $1.50 per 1,000 events, plus one `apify-actor-start` event of $0.001 per run (FREE-tier list prices).
+
+### 3.10 Instahyre Jobs Scraper - `data_daemon/instahyre-jobs-scraper` (`GMe0nzJEhMj9PV8Mb`)
+
+https://apify.com/data_daemon/instahyre-jobs-scraper - Instahyre, the hiring platform Indian product companies and startups use for engineering, data, product and design roles (about 12,700 open jobs on 2026-10-21; 6,800 in Bangalore, 1,100 work-from-home).
+
+Use when: Indian tech jobs with the hiring company's headcount, founding year, tagline and website; filtering by company size (`small` < 100, `medium` 100-1,000, `large` > 1,000) or by company; work-from-home tech roles; startup hiring signals for B2B sales.
+
+Input (verified 2026-10-21: `{"queries":["python"],"locations":["Bangalore"],"maxJobsPerQuery":5}` → 5 jobs with descriptions in 6 s; the `{}` default returned 50 jobs in 20 s):
+
+```json
+{
+  "queries": ["python", "golang"],
+  "locations": ["Bangalore", "Work From Home"],
+  "companySizes": ["small", "medium"],
+  "minExperience": 2,
+  "maxExperience": 6,
+  "postedWithinDays": 30,
+  "includeDescription": true,
+  "maxJobsPerQuery": 50,
+  "maxJobs": 0
+}
+```
+
+| Field | Notes |
+|---|---|
+| `queries` string[] (required) | skills or roles, matched against titles and skill tags (broad: `data science` also returns data-engineering roles); `skills` is accepted as an alias |
+| `locations` string[] | the site's own names: `Bangalore`, `Mumbai`, `Delhi`, `Gurgaon`, `Noida`, `Hyderabad`, `Chennai`, `Pune`, `Kolkata`, `Ahmedabad`, `Work From Home`, regions (`South India`) and ~300 smaller cities; `Bengaluru`/`Gurugram`/`Remote` are mapped; unknown names are dropped and named in the status message |
+| `companySizes` string[] | `small`, `medium`, `large`; applied by the site |
+| `companies` string[] | company names; with `queries: []` this lists everything a company posts |
+| `jobType` | `all` (default), `full-time`, `internship` |
+| `experienceYears` int | the site's own filter: jobs whose range covers this many years; cheapest way to narrow |
+| `minExperience` / `maxExperience` int | overlap band, read from each job page; jobs without a stated range are kept |
+| `postedWithinDays` int | 1-365; the site has no date filter, so the date is read from each job page and older jobs are left out unpaid |
+| `includeDescription` bool (default true) | fetches the job page: description, posting date, experience range, employment type, functions, company website; **same price either way**, about three times as fast when off |
+| `maxJobsPerQuery` int (default 50), `maxJobs` int (0 = no cap) | cost caps; the site serves 35 jobs per page |
+| `onlyNewSinceLastRun` bool, `stateName` string, `skipJobIds` string[] | monitor mode (actor-side memory per search in your account, skipped jobs not charged) and explicit exclusions |
+
+Output, one record per job: `id` (number), `dedupKey` (`instahyre:<id>`), `url`, `applyUrl` (same page), `title`, `company` {`id`, `name`, `tagline`, `about`, `founded`, `employeeCount`, `size`, `logo`, `website`, `featured`, `diversityEmployer`}, `locations` [], `remote`, `acceptsOutstation`, `experienceMinYears`, `experienceMaxYears`, `employmentType` (`FULL_TIME` / `INTERN`), `skills` [], `functions` [], `postedAt` (day precision), `description`, `descriptionHtml`, `query`, `scrapedAt`. No salary or applicant counts (the site does not publish them); recruiter names are not output.
+
+Cost: `job` $0.0008 with the description included → $0.80 per 1,000 jobs, plus one `apify-actor-start` event of $0.001 per run (FREE-tier list prices).
 
 ## 4. Not covered (do not route here)
 

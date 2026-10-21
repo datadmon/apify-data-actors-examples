@@ -5,6 +5,7 @@
 //   node only_new_jobs.mjs                                   # IIMJobs, "product manager", last 1 day
 //   node only_new_jobs.mjs hirist "data engineer" "python developer"
 //   node only_new_jobs.mjs foundit "sales manager"
+//   node only_new_jobs.mjs instahyre "python" "golang"
 //
 // De-duplication is chosen from the actor's live input schema on every run, so this works on any build:
 //   1. `onlyNewSinceLastRun` present (monitor mode; `onlyNewJobs` on old builds): the actor remembers delivered jobs per
@@ -17,7 +18,8 @@ import path from 'node:path';
 
 const API = 'https://api.apify.com/v2';
 const headers = { Authorization: `Bearer ${process.env.APIFY_TOKEN}`, 'Content-Type': 'application/json' };
-const ACTORS = { iimjobs: 'data_daemon~iimjobs-jobs-scraper', hirist: 'data_daemon~hirist-jobs-scraper', foundit: 'data_daemon~foundit-jobs-scraper' }; // fEBnL9mUQr81TGuh4, z2fAtS4KgvaqkK85b, UdAJvB5H72gNbfQfM
+const ACTORS = { iimjobs: 'data_daemon~iimjobs-jobs-scraper', hirist: 'data_daemon~hirist-jobs-scraper', foundit: 'data_daemon~foundit-jobs-scraper', instahyre: 'data_daemon~instahyre-jobs-scraper' };
+// ids fEBnL9mUQr81TGuh4, z2fAtS4KgvaqkK85b, UdAJvB5H72gNbfQfM, GMe0nzJEhMj9PV8Mb
 const MONITOR_FLAGS = ['onlyNewSinceLastRun', 'onlyNewJobs'];
 const STATE_KEY_FIELDS = ['stateName', 'stateKey', 'monitorKey']; // current builds use stateName
 const SKIP_LIST_FIELDS = ['skipJobIds', 'excludeJobIds'];

@@ -17,6 +17,7 @@ Every actor reads a site's own JSON endpoints, so runs take seconds, need no pro
 | [Dubai DLD Property Transactions](https://apify.com/data_daemon/dubai-property-transactions) | Dubai Land Department sales, mortgages and gifts with AED value and price/sqm | `fSoMCyHMdU0YHp4kk` | [python](python/dubai-property-transactions.py) · [node](node/dubai-property-transactions.mjs) · [n8n](n8n/dubai-property-transactions.json) |
 | [UK Gazette Insolvency Notices](https://apify.com/data_daemon/uk-gazette-insolvency-notices) | winding-up petitions, administrations, liquidations from The Gazette | `4We8IBpLtJp6OkQd8` | [python](python/uk-gazette-insolvency-notices.py) · [node](node/uk-gazette-insolvency-notices.mjs) · [n8n](n8n/uk-gazette-insolvency-notices.json) |
 | [Foundit (Monster India) Jobs Scraper](https://apify.com/data_daemon/foundit-jobs-scraper) | foundit.in jobs by keyword, city, experience and freshness, full descriptions included | `UdAJvB5H72gNbfQfM` | [python](python/foundit-jobs-scraper.py) · [node](node/foundit-jobs-scraper.mjs) · [n8n](n8n/foundit-jobs-scraper.json) |
+| [Instahyre Jobs Scraper](https://apify.com/data_daemon/instahyre-jobs-scraper) | India tech jobs from product companies and startups by skill, city, experience and company size, full descriptions included | `GMe0nzJEhMj9PV8Mb` | [python](python/instahyre-jobs-scraper.py) · [node](node/instahyre-jobs-scraper.mjs) · [n8n](n8n/instahyre-jobs-scraper.json) |
 | [Luma Events Scraper](https://apify.com/data_daemon/luma-events-scraper) | lu.ma events by city, category, keyword or calendar: dates, venue, tickets, hosts | `51GnTTp3L9zzrKcb7` | [python](python/luma-events-scraper.py) · [node](node/luma-events-scraper.mjs) · [n8n](n8n/luma-events-scraper.json) |
 <!-- actors:end -->
 
@@ -47,7 +48,7 @@ curl -sS -X POST "https://api.apify.com/v2/acts/data_daemon~iimjobs-jobs-scraper
 
 ## Schedule it: only new jobs, every morning
 
-[`examples/only-new-jobs/`](examples/only-new-jobs/) is a daily loop for IIMJobs, Hirist and Foundit that returns each job once. It reads the actor's live input schema and uses `onlyNewSinceLastRun` (actor-side memory in your own Apify account, skipped jobs are not charged) or `skipJobIds` when the build offers them, and always keeps a local seen-ids file as a safety net. Python and Node versions, cron and GitHub Actions snippets included.
+[`examples/only-new-jobs/`](examples/only-new-jobs/) is a daily loop for IIMJobs, Hirist, Foundit and Instahyre that returns each job once. It reads the actor's live input schema and uses `onlyNewSinceLastRun` (actor-side memory in your own Apify account, skipped jobs are not charged) or `skipJobIds` when the build offers them, and always keeps a local seen-ids file as a safety net. Python and Node versions, cron and GitHub Actions snippets included.
 
 No-code alternative: in Apify Console, fill the input, *Save as task*, *Schedules → Create schedule* (daily), then in the task's *Integrations* tab add Google Sheets, Slack, a webhook, Make or Zapier.
 
@@ -77,6 +78,7 @@ Pay per event; platform compute is included. The actor page shows the price for 
 | Dubai DLD | `transaction` $0.001 |
 | UK Gazette | `notice` $0.002 + `notice-details` $0.003 when `includeLinkedData` is on (default) |
 | Foundit | `job` $0.0008 with the description included → $0.80 per 1,000 jobs, plus `apify-actor-start` $0.001 per run |
+| Instahyre | `job` $0.0008 with the description included → $0.80 per 1,000 jobs, plus `apify-actor-start` $0.001 per run |
 | Luma | `event` $0.0015 with details included → $1.50 per 1,000 events, plus `apify-actor-start` $0.001 per run |
 
 Apify's free plan includes $5 of usage a month, enough to try every example here. Cap test runs with `maxJobs` / `maxItems`.
@@ -85,4 +87,4 @@ Apify's free plan includes $5 of usage a month, enough to try every example here
 
 Bug or missing field? Open an issue on the actor's *Issues* tab on Apify (fastest) or here. A quick review on the actor page helps other users find it.
 
-MIT licensed. Not affiliated with IIMJobs, Hirist, foundit, Oracle, Tickertape, Chittorgarh, InvestorGain, the Dubai Land Department, The Gazette or Luma.
+MIT licensed. Not affiliated with IIMJobs, Hirist, foundit, Instahyre, Oracle, Tickertape, Chittorgarh, InvestorGain, the Dubai Land Department, The Gazette or Luma.
