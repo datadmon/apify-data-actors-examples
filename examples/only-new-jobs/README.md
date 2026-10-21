@@ -1,10 +1,10 @@
-# Only new jobs, every morning (IIMJobs / Hirist)
+# Only new jobs, every morning (IIMJobs / Hirist / Foundit)
 
-A daily feed that returns each job once. Works with [IIMJobs Jobs Scraper](https://apify.com/data_daemon/iimjobs-jobs-scraper) (`fEBnL9mUQr81TGuh4`) and [Hirist.tech Jobs Scraper](https://apify.com/data_daemon/hirist-jobs-scraper) (`z2fAtS4KgvaqkK85b`); both share one input and output schema.
+A daily feed that returns each job once. Works with [IIMJobs Jobs Scraper](https://apify.com/data_daemon/iimjobs-jobs-scraper) (`fEBnL9mUQr81TGuh4`), [Hirist.tech Jobs Scraper](https://apify.com/data_daemon/hirist-jobs-scraper) (`z2fAtS4KgvaqkK85b`) and [Foundit Jobs Scraper](https://apify.com/data_daemon/foundit-jobs-scraper) (`UdAJvB5H72gNbfQfM`). IIMJobs and Hirist share one input and output schema; Foundit uses the same `queries` / `postedWithinDays` / `onlyNewSinceLastRun` / `skipJobIds` input fields and the same `id`, `title`, `company.name`, `locations`, `postedAt` and `url` output fields that this script prints.
 
 ```bash
 export APIFY_TOKEN=...                                   # https://console.apify.com/settings/integrations
-python only_new_jobs.py iimjobs "product manager"        # or: node only_new_jobs.mjs hirist "data engineer"
+python only_new_jobs.py iimjobs "product manager"        # or: node only_new_jobs.mjs hirist "data engineer" | python only_new_jobs.py foundit "sales manager"
 ```
 
 Each run calls `POST /v2/acts/{actor}/run-sync-get-dataset-items` with `postedWithinDays: 1`, then prints only jobs it has not printed before. State lives in `.state/<site>-seen.json` next to the script.
@@ -29,4 +29,4 @@ Check which fields your build has: `curl -s -H "Authorization: Bearer $APIFY_TOK
 
 ## Cost
 
-List prices (October 2026): $0.002 per job returned, plus $0.002 per job when `includeDescription` is on (default `true`; the scripts turn it off for a feed and you can turn it back on). A "product manager" feed on IIMJobs returned about 50 new jobs a day in October 2026, i.e. about $0.10 a day without descriptions. Jobs skipped by `onlyNewSinceLastRun` or `skipJobIds` cost nothing.
+List prices (October 2026): IIMJobs and Hirist $0.002 per job returned, plus $0.002 per job when `includeDescription` is on (default `true`; the scripts turn it off for a feed and you can turn it back on). Foundit $0.0008 per job with the description included either way, plus $0.001 per run. A "product manager" feed on IIMJobs returned about 50 new jobs a day in October 2026, i.e. about $0.10 a day without descriptions. Jobs skipped by `onlyNewSinceLastRun` or `skipJobIds` cost nothing.

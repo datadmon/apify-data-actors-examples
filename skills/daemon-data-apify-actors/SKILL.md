@@ -1,13 +1,13 @@
 ---
 name: daemon-data-apify-actors
-description: "Get structured data from Indian job boards (IIMJobs management/MBA/finance roles, Hirist.tech IT roles), any Oracle Recruiting Cloud / Fusion HCM career site, Indian IPOs (live GMP, subscription, calendar), NSE/BSE stocks via Tickertape (index constituents, screener, fundamentals), Dubai Land Department property transactions and UK Gazette insolvency notices, using the pay-per-record Apify actors published by data_daemon. Use when the user asks to scrape, export, monitor, count or benchmark any of these sources, wants a daily feed of new jobs/IPOs/petitions/transactions, or needs the data as JSON, CSV or Google Sheets. One HTTP call (run-sync-get-dataset-items) returns the records; no login or proxy."
+description: "Get structured data from Indian job boards (IIMJobs management/MBA/finance roles, Hirist.tech IT roles, foundit.in / Monster India jobs across every function), any Oracle Recruiting Cloud / Fusion HCM career site, Indian IPOs (live GMP, subscription, calendar), NSE/BSE stocks via Tickertape (index constituents, screener, fundamentals), Dubai Land Department property transactions, UK Gazette insolvency notices and Luma (lu.ma) events by city, category or organiser, using the pay-per-record Apify actors published by data_daemon. Use when the user asks to scrape, export, monitor, count or benchmark any of these sources, wants a daily feed of new jobs/IPOs/petitions/transactions/events, or needs the data as JSON, CSV or Google Sheets. One HTTP call (run-sync-get-dataset-items) returns the records; no login or proxy."
 author: Daemon Data
 author_url: https://apify.com/data_daemon
 license: MIT
 metadata:
   version: "1.0"
   category: data-extraction
-  keywords: "apify, iimjobs, hirist, india-jobs, oracle-hcm, oracle-recruiting-cloud, ipo-gmp, tickertape, nse, dubai-land-department, dld, uk-gazette, insolvency, winding-up-petitions"
+  keywords: "apify, iimjobs, hirist, foundit, monster-india, india-jobs, oracle-hcm, oracle-recruiting-cloud, ipo-gmp, tickertape, nse, dubai-land-department, dld, uk-gazette, insolvency, winding-up-petitions, luma, lu-ma, events"
 ---
 
 # Daemon Data actors on Apify
@@ -22,11 +22,13 @@ Full catalog with input fields, output fields and prices: [`AGENTS.md`](../../AG
 |---|---|---|
 | Indian management / MBA / finance / consulting / sales / HR jobs | `data_daemon/iimjobs-jobs-scraper` | $0.002 per job + $0.002 per description |
 | Indian software / data / DevOps / tech jobs | `data_daemon/hirist-jobs-scraper` | same |
+| Indian jobs on foundit.in (Monster India): freshers, sales, BPO, nursing, any function | `data_daemon/foundit-jobs-scraper` | $0.0008 per job, description included, + $0.001 per run |
 | Jobs from an `*.oraclecloud.com/hcmUI/CandidateExperience/...` career site | `data_daemon/oracle-hcm-jobs-scraper` | $0.002 per job + $0.002 per details |
 | Indian IPOs: GMP, subscription, dates, SME/mainboard | `data_daemon/india-ipo-tracker` | $0.003 per row, $0.015 per detail page |
 | NSE/BSE index lists, stock screener, fundamentals | `data_daemon/tickertape-stocks-scraper` | $0.002 per index/screener row, $0.02 per profile |
 | Dubai property sales, mortgages, gifts (DLD) | `data_daemon/dubai-property-transactions` | $0.001 per transaction |
 | UK winding-up petitions, administrations, liquidations | `data_daemon/uk-gazette-insolvency-notices` | $0.002 per notice + $0.003 per linked record |
+| Luma (lu.ma) events by city, category, keyword or organiser calendar | `data_daemon/luma-events-scraper` | $0.0015 per event, details included, + $0.001 per run |
 
 Out of scope: Naukri/LinkedIn/Indeed, Workday/Taleo/Greenhouse sites, non-Indian IPOs, Dubai listings or rentals, Companies House filings.
 
@@ -35,20 +37,20 @@ Out of scope: Naukri/LinkedIn/Indeed, Workday/Taleo/Greenhouse sites, non-Indian
 1. **Pick the actor** from the table. If the user names a company careers page, check the URL for `oraclecloud.com/hcmUI/CandidateExperience`; if it is not Oracle, say so instead of guessing.
 2. **Read the live input schema** before building the input (field names, enums and defaults can change):
    `GET https://api.apify.com/v2/acts/data_daemon~<name>/builds/default` → `data.inputSchema` (JSON string), or `apify actors info data_daemon/<name> --input`.
-3. **Size the cost**: expected records x price. Cap with `maxJobs` / `maxJobsPerSite` / `maxItems`; switch off `includeDescription` / `includeDetails` / `includeLinkedData` when the user needs counts, titles or a feed rather than full text. State the estimate when it is above about $1.
+3. **Size the cost**: expected records x price. Cap with `maxJobs` / `maxJobsPerSite` / `maxItems` / `maxEvents`; switch off `includeDescription` / `includeDetails` / `includeLinkedData` when the user needs counts, titles or a feed rather than full text (on Foundit and Luma this changes speed only, not price). State the estimate when it is above about $1.
 4. **Run**:
    ```bash
    curl -sS -X POST "https://api.apify.com/v2/acts/data_daemon~<name>/run-sync-get-dataset-items?clean=1" \
      -H "Authorization: Bearer $APIFY_TOKEN" -H "Content-Type: application/json" -d '<input json>'
    ```
    `&format=csv&fields=a,b.c` for CSV; the call waits up to 300 s. For bigger runs: `POST /v2/acts/{id}/runs`, poll `GET /v2/actor-runs/{runId}`, read `GET /v2/datasets/{datasetId}/items`. Via MCP: `https://mcp.apify.com?tools=data_daemon/<name>` with `Authorization: Bearer <token>`.
-5. **Validate and deliver**: de-duplicate on `id` (jobs), `transactionNumber` (Dubai), `noticeId` (Gazette); check returned cities/sites match the request; report how many rows a statistic rests on. Salaries on Indian boards are mostly hidden (`salaryHidden: true`); never estimate them.
+5. **Validate and deliver**: de-duplicate on `id` (jobs and events), `transactionNumber` (Dubai), `noticeId` (Gazette); check returned cities/sites match the request; report how many rows a statistic rests on. Salaries on Indian boards are mostly hidden (`salaryHidden: true`); never estimate them.
 
 ## Daily feeds
 
-IIMJobs/Hirist: `postedWithinDays: 1`, and when the live schema has them `onlyNewSinceLastRun: true` (actor remembers delivered jobs per search in the user's account; skipped jobs are free) or `skipJobIds: [...]`. Ready scripts: `examples/only-new-jobs/` (Python, Node) and `n8n/iimjobs-new-jobs-to-google-sheets-and-slack.json`. For other actors use a date filter (`startPublishDate`, `fromDate`) or `postedWithinDays: 7` on Oracle and de-duplicate on the id field.
+IIMJobs/Hirist/Foundit: `postedWithinDays: 1`, and when the live schema has them `onlyNewSinceLastRun: true` (actor remembers delivered jobs per search in the user's account; skipped jobs are free; `stateKey` names the search) or `skipJobIds: [...]`. Luma: `daysAhead` with `onlyNewSinceLastRun: true` or `skipEventIds`. Ready scripts: `examples/only-new-jobs/` (Python, Node) and `n8n/iimjobs-new-jobs-to-google-sheets-and-slack.json`. For other actors use a date filter (`startPublishDate`, `fromDate`) or `postedWithinDays: 7` on Oracle and de-duplicate on the id field.
 
-## Verified input examples (2026-10-18)
+## Verified input examples (2026-10-18; Foundit and Luma 2026-10-21)
 
 ```json
 {"queries":["product manager"],"locations":["Bangalore","Mumbai"],"postedWithinDays":7,"includeDescription":true,"maxJobsPerQuery":50}
@@ -57,4 +59,6 @@ IIMJobs/Hirist: `postedWithinDays: 1`, and when the live schema has them `onlyNe
 {"mode":"index","indexSid":"NIFTY 50"}
 {"transactionGroup":"sales","maxItems":500}
 {"noticeTypes":["2450"],"includeLinkedData":true,"maxItems":40}
+{"queries":["data analyst"],"locations":["Bangalore"],"postedWithinDays":7,"maxJobsPerQuery":50}
+{"cities":["London"],"categories":["ai"],"daysAhead":30,"maxEvents":50}
 ```

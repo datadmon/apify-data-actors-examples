@@ -1,13 +1,15 @@
-// Scheduled "only new jobs" loop for IIMJobs / Hirist. Node 18+, no dependencies. Run it every morning; each run
+// Scheduled "only new jobs" loop for IIMJobs / Hirist / Foundit. Node 18+, no dependencies. Run it every morning; each run
 // prints only the jobs it has not delivered before.
 //
 //   export APIFY_TOKEN=...
 //   node only_new_jobs.mjs                                   # IIMJobs, "product manager", last 1 day
 //   node only_new_jobs.mjs hirist "data engineer" "python developer"
+//   node only_new_jobs.mjs foundit "sales manager"
 //
 // De-duplication is chosen from the actor's live input schema on every run, so this works on any build:
-//   1. `onlyNewJobs` present (monitor mode): the actor remembers delivered jobs per search in your own Apify
-//      account and skips them before fetching details; skipped jobs are not charged. `monitorKey` separates searches.
+//   1. `onlyNewSinceLastRun` present (monitor mode; `onlyNewJobs` on old builds): the actor remembers delivered jobs per
+//      search in your own Apify account and skips them before fetching details; skipped jobs are not charged.
+//      `stateKey` separates searches.
 //   2. else `skipJobIds` present: we send the ids already seen and the actor filters them out.
 //   3. always: a local .state/<site>-seen.json file filters client-side as a safety net.
 import fs from 'node:fs';
@@ -15,8 +17,9 @@ import path from 'node:path';
 
 const API = 'https://api.apify.com/v2';
 const headers = { Authorization: `Bearer ${process.env.APIFY_TOKEN}`, 'Content-Type': 'application/json' };
-const ACTORS = { iimjobs: 'data_daemon~iimjobs-jobs-scraper', hirist: 'data_daemon~hirist-jobs-scraper' }; // fEBnL9mUQr81TGuh4, z2fAtS4KgvaqkK85b
-const MONITOR_FLAGS = ['onlyNewJobs', 'onlyNewSinceLastRun'];
+const ACTORS = { iimjobs: 'data_daemon~iimjobs-jobs-scraper', hirist: 'data_daemon~hirist-jobs-scraper', foundit: 'data_daemon~foundit-jobs-scraper' }; // fEBnL9mUQr81TGuh4, z2fAtS4KgvaqkK85b, UdAJvB5H72gNbfQfM
+const MONITOR_FLAGS = ['onlyNewSinceLastRun', 'onlyNewJobs'];
+const STATE_KEY_FIELDS = ['stateKey', 'monitorKey'];
 const SKIP_LIST_FIELDS = ['skipJobIds', 'excludeJobIds'];
 
 async function inputSchemaProps(actor) {
@@ -35,7 +38,8 @@ export async function fetchNewJobs(site, queries, { postedWithinDays = 1, withDe
     const skipField = SKIP_LIST_FIELDS.find((f) => f in props);
     if (flag) {
         input[flag] = true;
-        if ('monitorKey' in props) input.monitorKey = `${site}-${[...queries].sort().map((q) => q.replace(/ /g, '_')).join('-').slice(0, 30)}`;
+        const keyField = STATE_KEY_FIELDS.find((f) => f in props);
+        if (keyField) input[keyField] = `${site}-${[...queries].sort().map((q) => q.replace(/ /g, '_')).join('-').slice(0, 30)}`;
     } else if (skipField && Object.keys(seen).length) {
         input[skipField] = Object.keys(seen);
     }

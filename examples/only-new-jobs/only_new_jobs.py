@@ -1,15 +1,16 @@
-"""Scheduled "only new jobs" loop for IIMJobs / Hirist. Run it every morning (cron, GitHub Actions, Task Scheduler);
+"""Scheduled "only new jobs" loop for IIMJobs / Hirist / Foundit. Run it every morning (cron, GitHub Actions, Task Scheduler);
 each run prints only the jobs it has not delivered before. Standard library only.
 
     export APIFY_TOKEN=...
     python only_new_jobs.py                                  # IIMJobs, "product manager", last 1 day
     python only_new_jobs.py hirist "data engineer" "python developer"
+    python only_new_jobs.py foundit "sales manager"
 
 How the de-duplication works (checked against the actor's live input schema on every run, so this script is
 correct whichever build is deployed):
-  1. If the actor input has `onlyNewJobs` (monitor mode, latest builds): the actor itself remembers what it has
-     delivered for this search, in a key-value store in YOUR Apify account, and skips those jobs before fetching
-     details. Skipped jobs are not charged. `monitorKey` keeps several saved searches apart.
+  1. If the actor input has `onlyNewSinceLastRun` (monitor mode, current builds; `onlyNewJobs` on old ones): the actor
+     itself remembers what it has delivered for this search, in a key-value store in YOUR Apify account, and skips
+     those jobs before fetching details. Skipped jobs are not charged. `stateKey` keeps several saved searches apart.
   2. Else if the input has `skipJobIds`: we send the ids we have already seen; the actor filters them out.
   3. In every case the script also keeps a local seen-ids file (.state/<site>-seen.json) and filters client-side,
      so you never process the same job twice even if you change searches.
@@ -22,8 +23,10 @@ import urllib.request
 
 API = "https://api.apify.com/v2"
 HEADERS = {"Authorization": f"Bearer {os.environ['APIFY_TOKEN']}", "Content-Type": "application/json"}
-ACTORS = {"iimjobs": "data_daemon~iimjobs-jobs-scraper", "hirist": "data_daemon~hirist-jobs-scraper"}  # ids fEBnL9mUQr81TGuh4, z2fAtS4KgvaqkK85b
-MONITOR_FLAGS = ("onlyNewJobs", "onlyNewSinceLastRun")  # boolean: actor-side memory of delivered jobs
+ACTORS = {"iimjobs": "data_daemon~iimjobs-jobs-scraper", "hirist": "data_daemon~hirist-jobs-scraper",
+          "foundit": "data_daemon~foundit-jobs-scraper"}  # ids fEBnL9mUQr81TGuh4, z2fAtS4KgvaqkK85b, UdAJvB5H72gNbfQfM
+MONITOR_FLAGS = ("onlyNewSinceLastRun", "onlyNewJobs")  # boolean: actor-side memory of delivered jobs
+STATE_KEY_FIELDS = ("stateKey", "monitorKey")  # string: name of this saved search's memory
 SKIP_LIST_FIELDS = ("skipJobIds", "excludeJobIds")  # string[]: ids to leave out of this run
 
 
@@ -44,8 +47,9 @@ def fetch_new_jobs(site: str, queries: list[str], posted_within_days: int = 1, w
     skip_field = next((f for f in SKIP_LIST_FIELDS if f in props), None)
     if flag:
         run_input[flag] = True
-        if "monitorKey" in props:  # one memory per saved search
-            run_input["monitorKey"] = f"{site}-" + "-".join(q.replace(" ", "_") for q in sorted(queries))[:30]
+        key_field = next((f for f in STATE_KEY_FIELDS if f in props), None)
+        if key_field:  # one memory per saved search
+            run_input[key_field] = f"{site}-" + "-".join(q.replace(" ", "_") for q in sorted(queries))[:30]
     elif skip_field and seen:
         run_input[skip_field] = list(seen)
     print(f"dedupe: {'actor-side ' + flag if flag else ('actor-side ' + skip_field if skip_field else 'client-side only')}", file=sys.stderr)

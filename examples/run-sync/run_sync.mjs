@@ -7,7 +7,8 @@
 //   data_daemon/iimjobs-jobs-scraper fEBnL9mUQr81TGuh4 | data_daemon/hirist-jobs-scraper z2fAtS4KgvaqkK85b
 //   data_daemon/oracle-hcm-jobs-scraper ADeJJ5VJCcUqYI87X | data_daemon/india-ipo-tracker Q8tYzzX5YLgPLbQu4
 //   data_daemon/tickertape-stocks-scraper LjrpONBpsSkqWrHs5 | data_daemon/dubai-property-transactions fSoMCyHMdU0YHp4kk
-//   data_daemon/uk-gazette-insolvency-notices 4We8IBpLtJp6OkQd8
+//   data_daemon/uk-gazette-insolvency-notices 4We8IBpLtJp6OkQd8 | data_daemon/foundit-jobs-scraper UdAJvB5H72gNbfQfM
+//   data_daemon/luma-events-scraper 51GnTTp3L9zzrKcb7
 const API = 'https://api.apify.com/v2';
 const headers = { Authorization: `Bearer ${process.env.APIFY_TOKEN}`, 'Content-Type': 'application/json' };
 

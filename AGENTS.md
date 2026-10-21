@@ -1,6 +1,6 @@
 # AGENTS.md - Daemon Data actors on Apify
 
-Machine-readable notes for AI agents, coding assistants and MCP clients that need structured data from Indian job boards, Oracle Recruiting Cloud career sites, Indian IPO/stock sources, the Dubai Land Department or The Gazette (UK insolvency). All actors are published by `data_daemon` on Apify Store (https://apify.com/data_daemon), run on Apify's platform, read each site's own JSON endpoints (no login, no proxy), and charge per record returned. Prices below are list prices on 2026-10-18; the actor page shows the price for the user's plan. Input examples marked "verified" returned data on 2026-10-18.
+Machine-readable notes for AI agents, coding assistants and MCP clients that need structured data from Indian job boards, Oracle Recruiting Cloud career sites, Indian IPO/stock sources, the Dubai Land Department, The Gazette (UK insolvency) or Luma (lu.ma) events. All actors are published by `data_daemon` on Apify Store (https://apify.com/data_daemon), run on Apify's platform, read each site's own JSON endpoints (no login, no proxy), and charge per record returned. Prices below are list prices on 2026-10-18 (Foundit and Luma: 2026-10-21); the actor page shows the price for the user's plan. Input examples marked "verified" returned data on the date shown (2026-10-18 unless stated).
 
 ## 1. Which actor
 
@@ -8,11 +8,13 @@ Machine-readable notes for AI agents, coding assistants and MCP clients that nee
 |---|---|---|
 | Indian management, MBA, finance, consulting, CA/CFA, sales, HR, senior roles; salary bands (when disclosed); applicant counts; who is hiring in India | `data_daemon/iimjobs-jobs-scraper` | Tech roles (use Hirist); Naukri/LinkedIn/Indeed (not covered) |
 | Indian software, data, DevOps, product-tech roles; skills demand; tech salary bands | `data_daemon/hirist-jobs-scraper` | Non-tech roles (use IIMJobs) |
+| Indian jobs across every function and level on foundit.in (Monster India): freshers, sales, BPO, nursing, accounting, operations, IT; applicant and view counts; employer vs staffing agency; apply links to employer career sites | `data_daemon/foundit-jobs-scraper` | Naukri/LinkedIn/Indeed (not covered); senior management and MBA roles (IIMJobs has deeper coverage) |
 | Every open job of one employer whose careers page is on Oracle Recruiting Cloud / Fusion HCM (`*.oraclecloud.com/hcmUI/CandidateExperience/...`): JPMorgan Chase, Marriott, Oracle, Kotak, DTCC and thousands more | `data_daemon/oracle-hcm-jobs-scraper` | Workday, Taleo, Greenhouse, Lever, SuccessFactors sites |
 | Indian IPOs: live grey market premium (GMP), QIB/NII/retail subscription, open/close/listing dates, mainboard vs SME, full IPO detail pages | `data_daemon/india-ipo-tracker` | Non-Indian IPOs; secondary-market prices (use Tickertape) |
 | NSE/BSE listed companies: index constituents (NIFTY 50/100/500, NIFTY BANK, SENSEX), ratio screener, full fundamentals profile per stock | `data_daemon/tickertape-stocks-scraper` | Intraday tick data; derivatives; mutual fund NAVs |
 | Dubai real-estate transactions from the official DLD register: sales (incl. off-plan), mortgages, gifts, with AED value, size and price per sqm | `data_daemon/dubai-property-transactions` | Listings/asking prices; rental contracts; other emirates |
 | UK corporate insolvency notices from The Gazette: winding-up petitions (incl. HMRC), orders, administrations, liquidations, creditor meetings, with company number, addresses and insolvency practitioner | `data_daemon/uk-gazette-insolvency-notices` | Companies House filings; Scottish/Irish court records outside The Gazette |
+| Upcoming Luma (lu.ma) events by city, category, keyword or organiser calendar: dates, venue, GPS, ticket prices, guest count, hosts with social handles | `data_daemon/luma-events-scraper` | Eventbrite, Meetup (not covered); attendee or guest lists (never collected) |
 
 ## 2. How to call any of them
 
@@ -36,9 +38,9 @@ curl -sS "https://api.apify.com/v2/acts/data_daemon~iimjobs-jobs-scraper/builds/
 Other routes: Apify MCP server `https://mcp.apify.com?tools=data_daemon/iimjobs-jobs-scraper,data_daemon/india-ipo-tracker` (comma-separate any of the names above; Bearer header or OAuth; tools `search-actors`, `fetch-actor-details`, `call-actor` are also available), Apify CLI `apify call data_daemon/<name> -i '<json>'`, SDKs `apify-client` (Python, Node). Ready scripts: [`examples/run-sync/`](examples/run-sync/), [`examples/only-new-jobs/`](examples/only-new-jobs/).
 
 Rules of thumb:
-- **Size the cost first**: records x price per event. Cap with `maxJobs`, `maxJobsPerSite`, `maxItems`. Tell the user the estimate when it is above about $1.
-- **Turn off detail fetching when the user only needs counts or titles** (`includeDescription`, `includeDetails`, `includeLinkedData`, `includeIpoDetails` are on by default on the actors that have them and double the per-record price).
-- **Daily feeds**: for IIMJobs/Hirist set `postedWithinDays: 1` and, if the live schema has it, `onlyNewSinceLastRun: true` (actor-side memory per search, skipped jobs not charged) or `skipJobIds: [...]`. Always de-duplicate on `id` client-side too.
+- **Size the cost first**: records x price per event. Cap with `maxJobs`, `maxJobsPerSite`, `maxItems`, `maxEvents`. Tell the user the estimate when it is above about $1.
+- **Turn off detail fetching when the user only needs counts or titles** (`includeDescription`, `includeDetails`, `includeLinkedData`, `includeIpoDetails` are on by default on the actors that have them and double the per-record price on IIMJobs, Hirist, Oracle and Gazette; on Foundit and Luma they only change speed, not price).
+- **Daily feeds**: for IIMJobs/Hirist/Foundit set `postedWithinDays: 1` and, if the live schema has it, `onlyNewSinceLastRun: true` (actor-side memory per search, skipped jobs not charged; `stateKey` names the search) or `skipJobIds: [...]`. Luma has the same `onlyNewSinceLastRun` / `stateKey` plus `skipEventIds`. Always de-duplicate on `id` client-side too.
 - **Never fill gaps**: salaries are hidden on most Indian postings (`salaryHidden: true`); report the count of disclosed salaries next to any statistic.
 - **Run-sync limit**: 300 s. Full-board exports and big Oracle tenants (JPMC has 7,000+ open jobs) need the async pattern.
 
@@ -233,9 +235,87 @@ Output, one record per notice: `noticeId`, `url`, `title`, `category`, `categori
 
 Cost: `notice` $0.002 + `notice-details` $0.003.
 
+### 3.8 Foundit (Monster India) Jobs Scraper - `data_daemon/foundit-jobs-scraper` (`UdAJvB5H72gNbfQfM`)
+
+https://apify.com/data_daemon/foundit-jobs-scraper - foundit.in (formerly Monster India), a general Indian job board across all functions and levels, including many postings syndicated from employers' own career sites.
+
+Use when: Indian jobs outside the MBA and tech niches (sales, BPO, nursing, accounting, operations, freshers); fresher filters by experience band; applicant and view counts; employer vs staffing agency (`company.employerType`); the employer's own apply link for syndicated postings.
+
+Input (verified 2026-10-21: `{"queries":["data analyst"],"locations":["Bangalore"],"postedWithinDays":7,"maxJobsPerQuery":5}` → 5 jobs with descriptions in 8 s):
+
+```json
+{
+  "queries": ["data analyst", "sales manager"],
+  "locations": ["Bangalore", "Mumbai"],
+  "minExperience": 0,
+  "maxExperience": 3,
+  "postedWithinDays": 7,
+  "jobTypes": ["Permanent Job"],
+  "includeDescription": true,
+  "sort": "newest",
+  "maxJobsPerQuery": 100,
+  "maxJobs": 0
+}
+```
+
+| Field | Notes |
+|---|---|
+| `queries` string[] (required) | one search per keyword; a job found by two keywords is saved and charged once |
+| `locations` string[] | `Bangalore`, `Mumbai`, `Delhi` (covers Gurugram and Noida), `Hyderabad`, `Chennai`, `Pune`, `Kolkata`, `Ahmedabad`, `Remote`; empty = all of India |
+| `minExperience` / `maxExperience` int | years, 0-30; `maxExperience: 1` is a fresher filter; `minExperience` of 1 or more also drops jobs without a stated range |
+| `postedWithinDays` int | 1-365 |
+| `jobTypes` string[] | `Permanent Job`, `Contract Job`, `Work From Home`, `Internship`, `Temporary` |
+| `minSalaryLpa` / `maxSalaryLpa` int | disclosed annual salary in lakh INR; most postings do not disclose pay and are excluded when either is set |
+| `includeDescription` bool (default true) | full JD, company profile, skill tags, view count, coordinates; **same price either way**, about twice as fast when off |
+| `sort` | `newest` (default) or `relevance` |
+| `maxJobsPerQuery` int (default 50), `maxJobs` int (0 = no cap) | cost caps |
+| `onlyNewSinceLastRun` bool, `stateKey` string, `skipJobIds` string[] | monitor mode (actor-side memory per search in your account, skipped jobs not charged) and explicit exclusions |
+
+Output, one record per job: `id` (number), `dedupKey` (`foundit:<id>`), `url`, `applyUrl` (the employer's site for syndicated jobs), `title`, `company` {`id`, `name` (null when `confidential`), `logo`, `url`, `employerType` (`company` or `consultant`), `about`, `greatPlaceToWork`}, `locations` [], `locationDetails` [{`city`, `state`, `country`, `lat`, `lon`}], `remote`, `experienceMinYears`, `experienceMaxYears`, `salaryMinInr`, `salaryMaxInr`, `salaryMinLpa`, `salaryMaxLpa`, `salaryCurrency`, `salaryHidden`, `jobTypes` [], `employmentTypes` [], `industries` [], `functions` [], `designations` [], `skills` [], `applicants`, `views`, `postedAt`, `createdAt`, `updatedAt`, `closesAt`, `isActive`, `syndicated`, `urgentlyHiring`, `description`, `descriptionHtml`, `query`, `scrapedAt`. Recruiter names and phone numbers are not output.
+
+Cost: `job` $0.0008 with the description included → $0.80 per 1,000 jobs, plus one `apify-actor-start` event of $0.001 per run (FREE-tier list prices).
+
+### 3.9 Luma Events Scraper - `data_daemon/luma-events-scraper` (`51GnTTp3L9zzrKcb7`)
+
+https://apify.com/data_daemon/luma-events-scraper - upcoming public events on Luma (lu.ma / luma.com) from city feeds, categories, keyword search, organiser calendars or event URLs.
+
+Use when: "which AI or tech events are in London this month"; event calendars and newsletters; finding organisers and hosts with their website and social handles; ticket prices, capacity and sold-out status; monitoring an organiser's calendar for new events.
+
+Input (verified 2026-10-21: `{"cities":["London"],"categories":["ai"],"daysAhead":30,"maxEvents":5}` → 5 events with details in 5 s):
+
+```json
+{
+  "cities": ["London"],
+  "categories": ["ai", "tech"],
+  "daysAhead": 30,
+  "priceType": "any",
+  "eventFormat": "any",
+  "includeDetails": true,
+  "maxEvents": 100,
+  "maxEventsPerSource": 0
+}
+```
+
+| Field | Notes |
+|---|---|
+| `cities` string[] (required, default `["San Francisco"]`) | Luma discover cities (87), e.g. `San Francisco`, `New York`, `London`, `Berlin`, `Bengaluru`, `Tokyo`, `Singapore`; a `lu.ma/<city>` URL or `discplace-...` id also works; `[]` with `query` searches worldwide |
+| `categories` string[] | `ai`, `tech`, `arts`, `climate`, `crypto`, `fitness`, `wellness`, `running`, `books`, `games`, `family`, `fooddrink`; applied around each city |
+| `query` string | keyword matched by Luma in names and descriptions (50 best matches per feed) |
+| `startUrls` string[] | organiser calendars (`https://lu.ma/planetscale`), single events, city or category pages, or `cal-` / `evt-` / `discplace-` ids; when only URLs are given the default city is not scraped |
+| `daysAhead` int, `startDateFrom` / `startDateTo` `YYYY-MM-DD` | date window; feeds are ordered by start date, so `maxEvents` takes the soonest |
+| `priceType` | `any`, `free`, `paid` |
+| `eventFormat` | `any`, `in-person`, `online` |
+| `includeDetails` bool (default true) | description, ticket types, categories, sold-out flag; **same price either way** |
+| `maxEvents` int (default 25), `maxEventsPerSource` int (0 = no cap) | cost caps; a city has 50-150 upcoming events |
+| `onlyNewSinceLastRun` bool, `stateKey` string, `skipEventIds` string[] | monitor mode and explicit exclusions |
+
+Output, one record per event: `id` (`evt-...`), `dedupKey`, `url`, `name`, `startAt`, `endAt` (UTC), `timezone`, `startAtLocal`, `endAtLocal`, `format` (`in-person` or `online`), `venue`, `address`, `city`, `region`, `country`, `countryCode`, `lat`, `lng`, `addressHidden` (venue shown only to registered guests: `venue` and `address` are null and coordinates are rounded to about 1 km), `isFree`, `price`, `maxPrice`, `currency`, `soldOut`, `spotsRemaining`, `nearCapacity`, `requireApproval`, `registration`, `waitlist`, `guestCount`, `eventType`, `seriesId`, `visibility`, `discoverCity`, `calendar` {`id`, `name`, `slug`, `url`, `description`, `avatarUrl`, `website`, `isVerified`, `isPersonal`, `twitter`, `instagram`, `linkedin`, `youtube`, `tiktok`, `city`, `country`}, `hosts` [{`id`, `name`, `bio`, `username`, `profileUrl`, `avatarUrl`, `website`, `linkedin`, `twitter`, `instagram`, `tiktok`, `youtube`, `isVerified`}], `hostNames` [], `categories` [], `coverUrl`, with `includeDetails`: `description`, `descriptionHtml`, `ticketTypes` [{`id`, `name`, `isFree`, `price`, `currency`, `description`, `capacity`, `spotsRemaining`, `requireApproval`, `validFrom`, `validUntil`}]; plus `source` {`type`, `name`} and `scrapedAt`. Guest lists, attendee names, e-mails and phone numbers are never collected.
+
+Cost: `event` $0.0015 with details included → $1.50 per 1,000 events, plus one `apify-actor-start` event of $0.001 per run (FREE-tier list prices).
+
 ## 4. Not covered (do not route here)
 
-Naukri, LinkedIn, Indeed, Foundit, Glassdoor; Workday/Taleo/Greenhouse/Lever career sites; Indian equity price history or F&O; mutual funds; Dubai rental contracts or listings; Companies House filings. Startup India / DPIIT directory data: the `data_daemon/startup-india-dpiit-scraper` actor is currently private while its source API is down; do not call it.
+Naukri, LinkedIn, Indeed, Glassdoor; Workday/Taleo/Greenhouse/Lever career sites; Indian equity price history or F&O; mutual funds; Dubai rental contracts or listings; Companies House filings; Eventbrite, Meetup or any event's attendee list. Startup India / DPIIT directory data: the `data_daemon/startup-india-dpiit-scraper` actor is currently private while its source API is down; do not call it.
 
 ## 5. Examples in this repository
 
