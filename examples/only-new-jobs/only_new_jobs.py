@@ -10,7 +10,7 @@ How the de-duplication works (checked against the actor's live input schema on e
 correct whichever build is deployed):
   1. If the actor input has `onlyNewSinceLastRun` (monitor mode, current builds; `onlyNewJobs` on old ones): the actor
      itself remembers what it has delivered for this search, in a key-value store in YOUR Apify account, and skips
-     those jobs before fetching details. Skipped jobs are not charged. `stateKey` keeps several saved searches apart.
+     those jobs before fetching details. Skipped jobs are not charged. `stateName` keeps several saved searches apart.
   2. Else if the input has `skipJobIds`: we send the ids we have already seen; the actor filters them out.
   3. In every case the script also keeps a local seen-ids file (.state/<site>-seen.json) and filters client-side,
      so you never process the same job twice even if you change searches.
@@ -26,7 +26,7 @@ HEADERS = {"Authorization": f"Bearer {os.environ['APIFY_TOKEN']}", "Content-Type
 ACTORS = {"iimjobs": "data_daemon~iimjobs-jobs-scraper", "hirist": "data_daemon~hirist-jobs-scraper",
           "foundit": "data_daemon~foundit-jobs-scraper"}  # ids fEBnL9mUQr81TGuh4, z2fAtS4KgvaqkK85b, UdAJvB5H72gNbfQfM
 MONITOR_FLAGS = ("onlyNewSinceLastRun", "onlyNewJobs")  # boolean: actor-side memory of delivered jobs
-STATE_KEY_FIELDS = ("stateKey", "monitorKey")  # string: name of this saved search's memory
+STATE_KEY_FIELDS = ("stateName", "stateKey", "monitorKey")  # string: name of this saved search's memory (current builds use stateName)
 SKIP_LIST_FIELDS = ("skipJobIds", "excludeJobIds")  # string[]: ids to leave out of this run
 
 

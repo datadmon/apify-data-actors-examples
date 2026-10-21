@@ -48,7 +48,7 @@ Out of scope: Naukri/LinkedIn/Indeed, Workday/Taleo/Greenhouse sites, non-Indian
 
 ## Daily feeds
 
-IIMJobs/Hirist/Foundit: `postedWithinDays: 1`, and when the live schema has them `onlyNewSinceLastRun: true` (actor remembers delivered jobs per search in the user's account; skipped jobs are free; `stateKey` names the search) or `skipJobIds: [...]`. Luma: `daysAhead` with `onlyNewSinceLastRun: true` or `skipEventIds`. Ready scripts: `examples/only-new-jobs/` (Python, Node) and `n8n/iimjobs-new-jobs-to-google-sheets-and-slack.json`. For other actors use a date filter (`startPublishDate`, `fromDate`) or `postedWithinDays: 7` on Oracle and de-duplicate on the id field.
+IIMJobs/Hirist/Foundit: `postedWithinDays: 1`, and when the live schema has them `onlyNewSinceLastRun: true` (actor remembers delivered jobs per search in the user's account; skipped jobs are free; `stateName` names the search) or `skipJobIds: [...]`. Luma: `daysAhead` with `onlyNewSinceLastRun: true` or `skipEventIds`. Ready scripts: `examples/only-new-jobs/` (Python, Node) and `n8n/iimjobs-new-jobs-to-google-sheets-and-slack.json`. For other actors use a date filter (`startPublishDate`, `fromDate`) or `postedWithinDays: 7` on Oracle and de-duplicate on the id field.
 
 ## Verified input examples (2026-10-18; Foundit and Luma 2026-10-21)
 

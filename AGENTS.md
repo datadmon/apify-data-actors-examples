@@ -40,7 +40,7 @@ Other routes: Apify MCP server `https://mcp.apify.com?tools=data_daemon/iimjobs-
 Rules of thumb:
 - **Size the cost first**: records x price per event. Cap with `maxJobs`, `maxJobsPerSite`, `maxItems`, `maxEvents`. Tell the user the estimate when it is above about $1.
 - **Turn off detail fetching when the user only needs counts or titles** (`includeDescription`, `includeDetails`, `includeLinkedData`, `includeIpoDetails` are on by default on the actors that have them and double the per-record price on IIMJobs, Hirist, Oracle and Gazette; on Foundit and Luma they only change speed, not price).
-- **Daily feeds**: for IIMJobs/Hirist/Foundit set `postedWithinDays: 1` and, if the live schema has it, `onlyNewSinceLastRun: true` (actor-side memory per search, skipped jobs not charged; `stateKey` names the search) or `skipJobIds: [...]`. Luma has the same `onlyNewSinceLastRun` / `stateKey` plus `skipEventIds`. Always de-duplicate on `id` client-side too.
+- **Daily feeds**: for IIMJobs/Hirist/Foundit set `postedWithinDays: 1` and, if the live schema has it, `onlyNewSinceLastRun: true` (actor-side memory per search, skipped jobs not charged; `stateName` names the search) or `skipJobIds: [...]`. Luma has the same `onlyNewSinceLastRun` / `stateName` plus `skipEventIds`. Always de-duplicate on `id` client-side too.
 - **Never fill gaps**: salaries are hidden on most Indian postings (`salaryHidden: true`); report the count of disclosed salaries next to any statistic.
 - **Run-sync limit**: 300 s. Full-board exports and big Oracle tenants (JPMC has 7,000+ open jobs) need the async pattern.
 
@@ -75,7 +75,7 @@ Input (verified: `{"queries":["product manager"],"postedWithinDays":7,"maxJobsPe
 | `postedWithinDays` int | 1, 3, 7, 15, 30; omit for all |
 | `includeDescription` bool (default true) | full JD text + HTML and company profile; +$0.002 per job |
 | `maxJobsPerQuery` int (default 40), `maxJobs` int (0 = no cap) | cost caps |
-| `onlyNewSinceLastRun` bool, `stateKey` string, `skipJobIds` array | monitor mode and explicit exclusions; read the live schema |
+| `onlyNewSinceLastRun` bool, `stateName` string, `skipJobIds` array | monitor mode and explicit exclusions; read the live schema |
 
 Output, one record per job: `id`, `site`, `url`, `title`, `designation`, `company` {`name`, `domain`, `logo`, `confidential`, `ambitionBoxRating`, `ambitionBoxReviews`, `ambitionBoxUrl`, `about`}, `recruiter` {`designation`; `name` only where the board shows it publicly, otherwise masked}, `experienceMinYears`, `experienceMaxYears`, `salaryMinLpa`, `salaryMaxLpa`, `salaryHidden`, `locations` [], `remote`, `skills` [], `mandatorySkills` [], `applicants`, `postedAt` (ISO), `description`, `descriptionHtml` (with `includeDescription`), `query`, `scrapedAt`.
 
@@ -269,7 +269,7 @@ Input (verified 2026-10-21: `{"queries":["data analyst"],"locations":["Bangalore
 | `includeDescription` bool (default true) | full JD, company profile, skill tags, view count, coordinates; **same price either way**, about twice as fast when off |
 | `sort` | `newest` (default) or `relevance` |
 | `maxJobsPerQuery` int (default 50), `maxJobs` int (0 = no cap) | cost caps |
-| `onlyNewSinceLastRun` bool, `stateKey` string, `skipJobIds` string[] | monitor mode (actor-side memory per search in your account, skipped jobs not charged) and explicit exclusions |
+| `onlyNewSinceLastRun` bool, `stateName` string, `skipJobIds` string[] | monitor mode (actor-side memory per search in your account, skipped jobs not charged) and explicit exclusions |
 
 Output, one record per job: `id` (number), `dedupKey` (`foundit:<id>`), `url`, `applyUrl` (the employer's site for syndicated jobs), `title`, `company` {`id`, `name` (null when `confidential`), `logo`, `url`, `employerType` (`company` or `consultant`), `about`, `greatPlaceToWork`}, `locations` [], `locationDetails` [{`city`, `state`, `country`, `lat`, `lon`}], `remote`, `experienceMinYears`, `experienceMaxYears`, `salaryMinInr`, `salaryMaxInr`, `salaryMinLpa`, `salaryMaxLpa`, `salaryCurrency`, `salaryHidden`, `jobTypes` [], `employmentTypes` [], `industries` [], `functions` [], `designations` [], `skills` [], `applicants`, `views`, `postedAt`, `createdAt`, `updatedAt`, `closesAt`, `isActive`, `syndicated`, `urgentlyHiring`, `description`, `descriptionHtml`, `query`, `scrapedAt`. Recruiter names and phone numbers are not output.
 
@@ -307,7 +307,7 @@ Input (verified 2026-10-21: `{"cities":["London"],"categories":["ai"],"daysAhead
 | `eventFormat` | `any`, `in-person`, `online` |
 | `includeDetails` bool (default true) | description, ticket types, categories, sold-out flag; **same price either way** |
 | `maxEvents` int (default 25), `maxEventsPerSource` int (0 = no cap) | cost caps; a city has 50-150 upcoming events |
-| `onlyNewSinceLastRun` bool, `stateKey` string, `skipEventIds` string[] | monitor mode and explicit exclusions |
+| `onlyNewSinceLastRun` bool, `stateName` string, `skipEventIds` string[] | monitor mode and explicit exclusions |
 
 Output, one record per event: `id` (`evt-...`), `dedupKey`, `url`, `name`, `startAt`, `endAt` (UTC), `timezone`, `startAtLocal`, `endAtLocal`, `format` (`in-person` or `online`), `venue`, `address`, `city`, `region`, `country`, `countryCode`, `lat`, `lng`, `addressHidden` (venue shown only to registered guests: `venue` and `address` are null and coordinates are rounded to about 1 km), `isFree`, `price`, `maxPrice`, `currency`, `soldOut`, `spotsRemaining`, `nearCapacity`, `requireApproval`, `registration`, `waitlist`, `guestCount`, `eventType`, `seriesId`, `visibility`, `discoverCity`, `calendar` {`id`, `name`, `slug`, `url`, `description`, `avatarUrl`, `website`, `isVerified`, `isPersonal`, `twitter`, `instagram`, `linkedin`, `youtube`, `tiktok`, `city`, `country`}, `hosts` [{`id`, `name`, `bio`, `username`, `profileUrl`, `avatarUrl`, `website`, `linkedin`, `twitter`, `instagram`, `tiktok`, `youtube`, `isVerified`}], `hostNames` [], `categories` [], `coverUrl`, with `includeDetails`: `description`, `descriptionHtml`, `ticketTypes` [{`id`, `name`, `isFree`, `price`, `currency`, `description`, `capacity`, `spotsRemaining`, `requireApproval`, `validFrom`, `validUntil`}]; plus `source` {`type`, `name`} and `scrapedAt`. Guest lists, attendee names, e-mails and phone numbers are never collected.
 

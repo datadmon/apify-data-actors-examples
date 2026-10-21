@@ -15,7 +15,7 @@ The script reads the actor's live input schema (`GET /v2/acts/{actor}/builds/def
 
 | Actor input field | What happens | Charged for skipped jobs? |
 |---|---|---|
-| `onlyNewSinceLastRun: true` (+ optional `stateKey`), monitor mode in the latest builds | The actor keeps the ids it has delivered for that search in a key-value store **in your Apify account** and skips them before fetching details. Set `stateKey` to keep several saved searches apart; use a new key to start a fresh feed. | No |
+| `onlyNewSinceLastRun: true` (+ optional `stateName`), monitor mode in the latest builds | The actor keeps the ids it has delivered for that search in a key-value store **in your Apify account** and skips them before fetching details. Set `stateName` to keep several saved searches apart; use a new key to start a fresh feed. | No |
 | `skipJobIds: [...]` | The script sends the ids it has already seen; the actor leaves them out. | No |
 | neither | Everything posted in the last day comes back and the script filters locally. | Yes, for the repeats |
 

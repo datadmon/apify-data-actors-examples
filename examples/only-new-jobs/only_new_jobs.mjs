@@ -9,7 +9,7 @@
 // De-duplication is chosen from the actor's live input schema on every run, so this works on any build:
 //   1. `onlyNewSinceLastRun` present (monitor mode; `onlyNewJobs` on old builds): the actor remembers delivered jobs per
 //      search in your own Apify account and skips them before fetching details; skipped jobs are not charged.
-//      `stateKey` separates searches.
+//      `stateName` separates searches.
 //   2. else `skipJobIds` present: we send the ids already seen and the actor filters them out.
 //   3. always: a local .state/<site>-seen.json file filters client-side as a safety net.
 import fs from 'node:fs';
@@ -19,7 +19,7 @@ const API = 'https://api.apify.com/v2';
 const headers = { Authorization: `Bearer ${process.env.APIFY_TOKEN}`, 'Content-Type': 'application/json' };
 const ACTORS = { iimjobs: 'data_daemon~iimjobs-jobs-scraper', hirist: 'data_daemon~hirist-jobs-scraper', foundit: 'data_daemon~foundit-jobs-scraper' }; // fEBnL9mUQr81TGuh4, z2fAtS4KgvaqkK85b, UdAJvB5H72gNbfQfM
 const MONITOR_FLAGS = ['onlyNewSinceLastRun', 'onlyNewJobs'];
-const STATE_KEY_FIELDS = ['stateKey', 'monitorKey'];
+const STATE_KEY_FIELDS = ['stateName', 'stateKey', 'monitorKey']; // current builds use stateName
 const SKIP_LIST_FIELDS = ['skipJobIds', 'excludeJobIds'];
 
 async function inputSchemaProps(actor) {
