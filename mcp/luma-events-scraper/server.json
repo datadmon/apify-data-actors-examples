@@ -1,0 +1,26 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.datadmon/luma-events-scraper",
+  "description": "Lu.ma events by city, category, keyword or calendar: dates, venue, tickets, hosts (Apify Actor da...",
+  "title": "Luma Events Scraper (Apify)",
+  "repository": {
+    "url": "https://github.com/datadmon/apify-data-actors-examples",
+    "source": "github"
+  },
+  "version": "1.0.0",
+  "websiteUrl": "https://apify.com/data_daemon/luma-events-scraper",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://mcp.apify.com/?tools=data_daemon/luma-events-scraper",
+      "headers": [
+        {
+          "name": "Authorization",
+          "description": "Apify API token as 'Bearer <APIFY_TOKEN>'. Free token at https://console.apify.com/account/integrations",
+          "isRequired": true,
+          "isSecret": true
+        }
+      ]
+    }
+  ]
+}

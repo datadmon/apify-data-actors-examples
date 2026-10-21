@@ -1,0 +1,26 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.datadmon/uk-gazette-insolvency-notices",
+  "description": "Winding-up petitions, administrations, liquidations from The Gazette (Apify Actor data_daemon/uk-...",
+  "title": "UK Gazette Insolvency Notices (Apify)",
+  "repository": {
+    "url": "https://github.com/datadmon/apify-data-actors-examples",
+    "source": "github"
+  },
+  "version": "1.0.0",
+  "websiteUrl": "https://apify.com/data_daemon/uk-gazette-insolvency-notices",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://mcp.apify.com/?tools=data_daemon/uk-gazette-insolvency-notices",
+      "headers": [
+        {
+          "name": "Authorization",
+          "description": "Apify API token as 'Bearer <APIFY_TOKEN>'. Free token at https://console.apify.com/account/integrations",
+          "isRequired": true,
+          "isSecret": true
+        }
+      ]
+    }
+  ]
+}

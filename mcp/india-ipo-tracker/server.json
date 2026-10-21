@@ -1,0 +1,26 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.datadmon/india-ipo-tracker",
+  "description": "Live IPO GMP, QIB/NII/retail subscription, calendar, listing data (Apify Actor data_daemon/india-...",
+  "title": "India IPO Tracker (Apify)",
+  "repository": {
+    "url": "https://github.com/datadmon/apify-data-actors-examples",
+    "source": "github"
+  },
+  "version": "1.0.0",
+  "websiteUrl": "https://apify.com/data_daemon/india-ipo-tracker",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://mcp.apify.com/?tools=data_daemon/india-ipo-tracker",
+      "headers": [
+        {
+          "name": "Authorization",
+          "description": "Apify API token as 'Bearer <APIFY_TOKEN>'. Free token at https://console.apify.com/account/integrations",
+          "isRequired": true,
+          "isSecret": true
+        }
+      ]
+    }
+  ]
+}

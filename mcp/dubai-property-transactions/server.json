@@ -1,0 +1,26 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.datadmon/dubai-property-transactions",
+  "description": "Dubai Land Department sales, mortgages and gifts with AED value and price/sqm (Apify Actor data_d...",
+  "title": "Dubai DLD Property Transactions (Apify)",
+  "repository": {
+    "url": "https://github.com/datadmon/apify-data-actors-examples",
+    "source": "github"
+  },
+  "version": "1.0.0",
+  "websiteUrl": "https://apify.com/data_daemon/dubai-property-transactions",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://mcp.apify.com/?tools=data_daemon/dubai-property-transactions",
+      "headers": [
+        {
+          "name": "Authorization",
+          "description": "Apify API token as 'Bearer <APIFY_TOKEN>'. Free token at https://console.apify.com/account/integrations",
+          "isRequired": true,
+          "isSecret": true
+        }
+      ]
+    }
+  ]
+}
