@@ -1,13 +1,13 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.datadmon/foundit-jobs-scraper",
-  "description": "Foundit.in jobs by keyword, city, experience and freshness, full descriptions included (Apify Act...",
-  "title": "Foundit (Monster India) Jobs Scraper (Apify)",
+  "description": "foundit (Monster India) jobs as JSON: any function, full JD, salary, apply link. $0.80/1k",
+  "title": "Foundit Jobs Scraper (Apify) - foundit.in / Monster India jobs",
   "repository": {
     "url": "https://github.com/datadmon/apify-data-actors-examples",
     "source": "github"
   },
-  "version": "1.0.0",
+  "version": "1.0.1",
   "websiteUrl": "https://apify.com/data_daemon/foundit-jobs-scraper",
   "remotes": [
     {

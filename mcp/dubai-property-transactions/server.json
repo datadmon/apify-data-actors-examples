@@ -1,13 +1,13 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.datadmon/dubai-property-transactions",
-  "description": "Dubai Land Department sales, mortgages and gifts with AED value and price/sqm (Apify Actor data_d...",
-  "title": "Dubai DLD Property Transactions (Apify)",
+  "description": "Dubai Land Department transactions as JSON: sales, mortgages, gifts, AED, price/sqm. $1/1k",
+  "title": "Dubai DLD Property Transactions (Apify) - registered sales, mortgages, gifts",
   "repository": {
     "url": "https://github.com/datadmon/apify-data-actors-examples",
     "source": "github"
   },
-  "version": "1.0.0",
+  "version": "1.0.1",
   "websiteUrl": "https://apify.com/data_daemon/dubai-property-transactions",
   "remotes": [
     {

@@ -1,13 +1,13 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.datadmon/iimjobs-jobs-scraper",
-  "description": "India MBA, finance, consulting and management jobs with full descriptions (Apify Actor data_daemo...",
-  "title": "IIMJobs Jobs Scraper (Apify)",
+  "description": "IIMJobs India MBA, finance & management jobs as JSON: full JD, salary, applicants. $2/1k",
+  "title": "IIMJobs Jobs Scraper (Apify) - India MBA, finance & management jobs",
   "repository": {
     "url": "https://github.com/datadmon/apify-data-actors-examples",
     "source": "github"
   },
-  "version": "1.0.0",
+  "version": "1.0.1",
   "websiteUrl": "https://apify.com/data_daemon/iimjobs-jobs-scraper",
   "remotes": [
     {

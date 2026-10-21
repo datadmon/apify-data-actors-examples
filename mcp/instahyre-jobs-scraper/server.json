@@ -1,13 +1,13 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.datadmon/instahyre-jobs-scraper",
-  "description": "India tech jobs from product companies and startups by skill, city, experience and company size...",
-  "title": "Instahyre Jobs Scraper (Apify)",
+  "description": "Instahyre India startup tech jobs as JSON: full JD, skills, company size. $0.80/1k",
+  "title": "Instahyre Jobs Scraper (Apify) - India startup and product-company tech jobs",
   "repository": {
     "url": "https://github.com/datadmon/apify-data-actors-examples",
     "source": "github"
   },
-  "version": "1.0.0",
+  "version": "1.0.1",
   "websiteUrl": "https://apify.com/data_daemon/instahyre-jobs-scraper",
   "remotes": [
     {

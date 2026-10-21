@@ -1,13 +1,13 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.datadmon/uk-gazette-insolvency-notices",
-  "description": "Winding-up petitions, administrations, liquidations from The Gazette (Apify Actor data_daemon/uk-...",
-  "title": "UK Gazette Insolvency Notices (Apify)",
+  "description": "UK Gazette insolvency notices as JSON: winding-up petitions, administrations, co. no. $5/1k",
+  "title": "UK Gazette Insolvency Notices (Apify) - winding-up petitions and administrations",
   "repository": {
     "url": "https://github.com/datadmon/apify-data-actors-examples",
     "source": "github"
   },
-  "version": "1.0.0",
+  "version": "1.0.1",
   "websiteUrl": "https://apify.com/data_daemon/uk-gazette-insolvency-notices",
   "remotes": [
     {
