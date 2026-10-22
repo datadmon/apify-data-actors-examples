@@ -1,13 +1,13 @@
 ---
 name: daemon-data-apify-actors
-description: "Get structured data from Indian job boards (IIMJobs management/MBA/finance roles, Hirist.tech IT roles, foundit.in / Monster India jobs across every function, Instahyre tech jobs at product companies and startups with company size), any Oracle Recruiting Cloud / Fusion HCM career site, Indian IPOs (live GMP, subscription, calendar), NSE/BSE stocks via Tickertape (index constituents, screener, fundamentals), Dubai Land Department property transactions, UK Gazette insolvency notices and Luma (lu.ma) events by city, category or organiser, using the pay-per-record Apify actors published by data_daemon. Use when the user asks to scrape, export, monitor, count or benchmark any of these sources, wants a daily feed of new jobs/IPOs/petitions/transactions/events, or needs the data as JSON, CSV or Google Sheets. One HTTP call (run-sync-get-dataset-items) returns the records; no login or proxy."
+description: "Get structured data from the France-focused public Welcome to the Jungle job board (excluding separate US/UK matching inventory), Indian job boards (IIMJobs management/MBA/finance roles, Hirist.tech IT roles, foundit.in / Monster India jobs across every function, Instahyre tech jobs at product companies and startups with company size), any Oracle Recruiting Cloud / Fusion HCM career site, Indian IPOs (live GMP, subscription, calendar), NSE/BSE stocks via Tickertape (index constituents, screener, fundamentals), Dubai Land Department property transactions, UK Gazette insolvency notices and Luma (lu.ma) events by city, category or organiser, using the pay-per-record Apify actors published by data_daemon. Use when the user asks to scrape, export, monitor, count or benchmark any of these sources, wants a daily feed of new jobs/IPOs/petitions/transactions/events, or needs the data as JSON, CSV or Google Sheets. One HTTP call (run-sync-get-dataset-items) returns the records; no login or proxy."
 author: Daemon Data
 author_url: https://apify.com/data_daemon
 license: MIT
 metadata:
   version: "1.0"
   category: data-extraction
-  keywords: "apify, iimjobs, hirist, foundit, instahyre, monster-india, india-jobs, oracle-hcm, oracle-recruiting-cloud, ipo-gmp, tickertape, nse, dubai-land-department, dld, uk-gazette, insolvency, winding-up-petitions, luma, lu-ma, events"
+  keywords: "apify, welcome-to-the-jungle, wttj, iimjobs, hirist, foundit, instahyre, monster-india, india-jobs, oracle-hcm, oracle-recruiting-cloud, ipo-gmp, tickertape, nse, dubai-land-department, dld, uk-gazette, insolvency, winding-up-petitions, luma, lu-ma, events"
 ---
 
 # Daemon Data actors on Apify

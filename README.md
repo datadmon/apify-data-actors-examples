@@ -82,6 +82,7 @@ Pay per event; platform compute is included. The actor page shows the price for 
 | UK Gazette | `notice` $0.002 + `notice-details` $0.003 when `includeLinkedData` is on (default) |
 | Foundit | `job` $0.0008 with the description included → $0.80 per 1,000 jobs, plus `apify-actor-start` $0.001 per run |
 | Instahyre | `job` $0.0008 with the description included → $0.80 per 1,000 jobs, plus `apify-actor-start` $0.001 per run |
+| Welcome to the Jungle | `job` $0.0008 with description included + $0.001 per run (Free/Starter); France-focused public board, separate US/UK matching inventory excluded |
 | Luma | `event` $0.0015 with details included → $1.50 per 1,000 events, plus `apify-actor-start` $0.001 per run |
 
 Apify's free plan includes $5 of usage a month, enough to try every example here. Cap test runs with `maxJobs` / `maxItems`.

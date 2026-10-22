@@ -1,6 +1,6 @@
 # AGENTS.md - Daemon Data actors on Apify
 
-Machine-readable notes for AI agents, coding assistants and MCP clients that need structured data from Indian job boards, Oracle Recruiting Cloud career sites, Indian IPO/stock sources, the Dubai Land Department, The Gazette (UK insolvency) or Luma (lu.ma) events. All actors are published by `data_daemon` on Apify Store (https://apify.com/data_daemon), run on Apify's platform, read each site's own JSON endpoints (no login, no proxy), and charge per record returned. Prices below are list prices on 2026-10-18 (Foundit and Luma: 2026-10-21); the actor page shows the price for the user's plan. Input examples marked "verified" returned data on the date shown (2026-10-18 unless stated).
+Machine-readable notes for AI agents, coding assistants and MCP clients that need structured data from the France-focused public Welcome to the Jungle board, Indian job boards, Oracle Recruiting Cloud career sites, Indian IPO/stock sources, the Dubai Land Department, The Gazette (UK insolvency) or Luma (lu.ma) events. All actors are published by `data_daemon` on Apify Store (https://apify.com/data_daemon), run on Apify's platform, read each site's own JSON endpoints (no login, no proxy), and charge per record returned. Prices below are list prices on 2026-10-18 (Foundit and Luma: 2026-10-21); the actor page shows the price for the user's plan. Input examples marked "verified" returned data on the date shown (2026-10-18 unless stated).
 
 ## 1. Which actor
 
