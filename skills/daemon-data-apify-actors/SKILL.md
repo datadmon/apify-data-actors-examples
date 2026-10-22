@@ -20,6 +20,7 @@ Full catalog with input fields, output fields and prices: [`AGENTS.md`](../../AG
 
 | Request | Actor ID | Price (list, Oct 2026) |
 |---|---|---|
+| Welcome to the Jungle public jobs, France-focused board, company profiles and only-new feeds | `data_daemon/welcome-to-the-jungle-jobs-scraper` | $0.0008 per job with description + $0.001 per run; raw salary units vary; excludes separate US/UK matching inventory |
 | Indian management / MBA / finance / consulting / sales / HR jobs | `data_daemon/iimjobs-jobs-scraper` | $0.002 per job + $0.002 per description |
 | Indian software / data / DevOps / tech jobs | `data_daemon/hirist-jobs-scraper` | same |
 | Indian jobs on foundit.in (Monster India): freshers, sales, BPO, nursing, any function | `data_daemon/foundit-jobs-scraper` | $0.0008 per job, description included, + $0.001 per run |

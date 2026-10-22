@@ -1,0 +1,26 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.datadmon/welcome-to-the-jungle-jobs-scraper",
+  "description": "WTTJ France-focused public board jobs as JSON: full JD, company, only-new feed. $0.80/1k",
+  "title": "Welcome to the Jungle Jobs Scraper (Apify) - public WTTJ board",
+  "repository": {
+    "url": "https://github.com/datadmon/apify-data-actors-examples",
+    "source": "github"
+  },
+  "version": "1.0.1",
+  "websiteUrl": "https://apify.com/data_daemon/welcome-to-the-jungle-jobs-scraper",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://mcp.apify.com/?tools=data_daemon/welcome-to-the-jungle-jobs-scraper",
+      "headers": [
+        {
+          "name": "Authorization",
+          "description": "Apify API token as 'Bearer <APIFY_TOKEN>'. Free token at https://console.apify.com/account/integrations",
+          "isRequired": true,
+          "isSecret": true
+        }
+      ]
+    }
+  ]
+}

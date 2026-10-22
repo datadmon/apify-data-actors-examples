@@ -6,6 +6,7 @@ Machine-readable notes for AI agents, coding assistants and MCP clients that nee
 
 | The user wants | Use | Not for |
 |---|---|---|
+| Public Welcome to the Jungle jobs: France-focused board, including its postings abroad; full descriptions, public company metadata, contract/remote filters and only-new feeds | `data_daemon/welcome-to-the-jungle-jobs-scraper` | Separate Otta/US/UK personalized matching inventory; normalized salary benchmarks (raw source units vary); more than 1,000 hits per source search |
 | Indian management, MBA, finance, consulting, CA/CFA, sales, HR, senior roles; salary bands (when disclosed); applicant counts; who is hiring in India | `data_daemon/iimjobs-jobs-scraper` | Tech roles (use Hirist); Naukri/LinkedIn/Indeed (not covered) |
 | Indian software, data, DevOps, product-tech roles; skills demand; tech salary bands | `data_daemon/hirist-jobs-scraper` | Non-tech roles (use IIMJobs) |
 | Indian jobs across every function and level on foundit.in (Monster India): freshers, sales, BPO, nursing, accounting, operations, IT; applicant and view counts; employer vs staffing agency; apply links to employer career sites | `data_daemon/foundit-jobs-scraper` | Naukri/LinkedIn/Indeed (not covered); senior management and MBA roles (IIMJobs has deeper coverage) |
@@ -353,6 +354,26 @@ Input (verified 2026-10-21: `{"queries":["python"],"locations":["Bangalore"],"ma
 Output, one record per job: `id` (number), `dedupKey` (`instahyre:<id>`), `url`, `applyUrl` (same page), `title`, `company` {`id`, `name`, `tagline`, `about`, `founded`, `employeeCount`, `size`, `logo`, `website`, `featured`, `diversityEmployer`}, `locations` [], `remote`, `acceptsOutstation`, `experienceMinYears`, `experienceMaxYears`, `employmentType` (`FULL_TIME` / `INTERN`), `skills` [], `functions` [], `postedAt` (day precision), `description`, `descriptionHtml`, `query`, `scrapedAt`. No salary or applicant counts (the site does not publish them); recruiter names are not output.
 
 Cost: `job` $0.0008 with the description included → $0.80 per 1,000 jobs, plus one `apify-actor-start` event of $0.001 per run (FREE-tier list prices).
+
+### 3.11 Welcome to the Jungle Jobs Scraper - `data_daemon/welcome-to-the-jungle-jobs-scraper` (`rJLnujVhP6ucdnrof`)
+
+https://apify.com/data_daemon/welcome-to-the-jungle-jobs-scraper - the France-focused public WTTJ board, including its postings abroad. Does not cover the separate Otta/US/UK personalized matching inventory.
+
+Use when: public WTTJ jobs as JSON, full descriptions and public company profiles; keyword/country/contract/remote filters; a persistent feed of jobs not delivered before.
+
+```json
+{"queries":["python"],"countryCodes":["FR"],"contractTypes":["FULL_TIME"],"maxJobs":20}
+```
+
+Empty input searches Python and delivers up to 20 jobs. `maxJobsPerQuery` and `maxJobs` default to 20. A source search exposes at most 1,000 accessible hits; narrow broad searches with country/company/contract/language/remote filters. `locations` (office substring) and `postedWithinDays` (unknown dates excluded) are local filters within that source window.
+
+Input: `queries`, `countryCodes`, `locations`, `contractTypes`, `remoteModes` (`fulltime`, `partial`, `punctual`, `no`, `unknown`), `languages`, `companySlugs`, `salaryCurrency`, `postedWithinDays`, `includeDescription` (true), `maxJobsPerQuery`, `maxJobs`, `skipJobIds`, `onlyNewSinceLastRun`, `stateName`.
+
+Only-new memory remembers delivered IDs for 120 days, at most 50,000 per feed. Same named feed shares state across tasks in the account; avoid overlapping runs. Later runs may fill older unseen backlog left by the first run's cap. Output `id`, `sourceId` or `dedupKey` can be used in `skipJobIds`.
+
+Output: stable `id`, `sourceId`, `dedupKey`, `url`, `applyUrl`, `title`, `company`, `locations`, `offices`, `countryCodes`, `remoteMode`, `contractType`, `language`, `salary`, experience/education labels, `profession`, `sectors`, `skills`, `postedAt`, `updatedAt`, `startDate`, full description HTML/text, candidate profile and recruitment process, `query`, `source`, `scrapedAt`. **Salary numbers have inconsistent employer-entered units; preserve them as provided and never guess a multiplier for benchmarking.**
+
+Cost: $0.0008 per delivered job with description included plus $0.001 per run at Free/Starter rates. Skipped/duplicate jobs are not charged. Scale job/start $0.00068/$0.00085; Business+ $0.00056/$0.0007.
 
 ## 4. Not covered (do not route here)
 
