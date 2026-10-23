@@ -1,17 +1,52 @@
 {
-  "name": "New IIMJobs jobs every morning to Google Sheets and Slack (Apify, no community nodes)",
+  "name": "Send new IIMJobs postings to Google Sheets and Slack with Apify",
   "nodes": [
     {
       "parameters": {
-        "content": "## New IIMJobs jobs → Google Sheets + Slack\n\nRuns daily at 08:00, calls the Apify actor **data_daemon/iimjobs-jobs-scraper** (id fEBnL9mUQr81TGuh4) with `postedWithinDays: 1`, upserts every job into a sheet (matched on `id`, so re-runs never duplicate) and posts one Slack message with the count.\n\n**Setup**\n1. HTTP Request node → credential *Header Auth*: Name `Authorization`, Value `Bearer <your Apify token>` (console.apify.com → Settings → Integrations).\n2. Google Sheets node → your Google account; paste your spreadsheet URL; tab `Jobs` with this header row: `id, title, company, locations, experience, salaryLpa, skills, applicants, postedAt, url`.\n3. Slack node → your Slack credential and channel.\n4. Edit the `queries` in the HTTP node body. For Hirist (tech jobs) change the URL to `data_daemon~hirist-jobs-scraper` (same input/output).\n\nCost: $0.002 per job returned (descriptions are off here; set `includeDescription: true` to add the full JD at +$0.002/job). If the actor's input schema has `onlyNewSinceLastRun`, add `\"onlyNewSinceLastRun\": true` to the body so already-delivered jobs are skipped before they are charged.",
-        "height": 520,
-        "width": 420
+        "content": "## Send new IIMJobs postings to Google Sheets and Slack\n\n**Who it's for:** recruiters, hiring-market analysts and job seekers tracking MBA, finance, consulting and management roles in India.\n\n**What it does:** every morning it asks the Apify actor [IIMJobs Jobs Scraper](https://apify.com/data_daemon/iimjobs-jobs-scraper) for postings that this feed has **not delivered before**, upserts them into a Google Sheet (matched on `id`) and posts a short Slack summary.\n\n**Setup (5 minutes)**\n1. Create a free Apify account and copy your API token (Apify Console → Settings → API & Integrations).\n2. In **Get new IIMJobs postings**, create a *Header Auth* credential: name `Authorization`, value `Bearer YOUR_APIFY_TOKEN`.\n3. In **Upsert jobs into Google Sheets**, connect Google and paste your sheet URL. Add a `Jobs` tab with the header row `id, title, company, locations, experience, salaryLpa, skills, applicants, postedAt, url`.\n4. In **Slack summary**, connect Slack and pick a channel.\n5. Edit `queries` in the request body, then activate the workflow.\n\n**Requirements:** Apify account (pay per result; the price is on the actor page), Google Sheets, Slack.\n\n**Customize:** change `queries`, add `locations` (e.g. `[\"Mumbai\"]`), set `includeDescription: true` for full job descriptions, or point the URL at `data_daemon~hirist-jobs-scraper` for tech jobs (same output fields).",
+        "height": 720,
+        "width": 460
       },
-      "id": "note-1",
+      "id": "fb89b0c7-7859-433a-bf52-d33f3e09c00f",
       "name": "Sticky Note",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
-      "position": [-460, -120]
+      "position": [
+        -560,
+        -260
+      ]
+    },
+    {
+      "parameters": {
+        "content": "### 1. Fetch only new jobs\nRuns at 08:00. `onlyNewSinceLastRun` + `stateName` make Apify remember which jobs this feed already sent, so nothing is duplicated. `maxTotalChargeUsd` in the URL caps the cost of a single run.",
+        "height": 240,
+        "width": 520,
+        "color": 7
+      },
+      "id": "93a67617-8704-4f81-9e89-1561933dcfc2",
+      "name": "Sticky Note1",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -40,
+        -260
+      ]
+    },
+    {
+      "parameters": {
+        "content": "### 2. Store and notify\nRows are upserted on `id`. Hidden salaries show as `hidden`; most IIMJobs recruiters hide pay. Slack gets the count and the first five jobs.",
+        "height": 240,
+        "width": 520,
+        "color": 5
+      },
+      "id": "2edd670a-916c-4c36-a94f-df445832859e",
+      "name": "Sticky Note2",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        500,
+        -260
+      ]
     },
     {
       "parameters": {
@@ -28,17 +63,20 @@
       "name": "Every day 08:00",
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.2,
-      "position": [0, 0]
+      "position": [
+        0,
+        40
+      ]
     },
     {
       "parameters": {
         "method": "POST",
-        "url": "https://api.apify.com/v2/acts/data_daemon~iimjobs-jobs-scraper/run-sync-get-dataset-items?clean=1",
+        "url": "https://api.apify.com/v2/acts/data_daemon~iimjobs-jobs-scraper/run-sync-get-dataset-items?clean=1&maxTotalChargeUsd=0.5",
         "authentication": "genericCredentialType",
         "genericAuthType": "httpHeaderAuth",
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "{\n  \"queries\": [\"product manager\", \"investment banking\"],\n  \"locations\": [],\n  \"postedWithinDays\": 1,\n  \"includeDescription\": false,\n  \"maxJobsPerQuery\": 200\n}",
+        "jsonBody": "{\n  \"queries\": [\n    \"product manager\",\n    \"investment banking\"\n  ],\n  \"locations\": [],\n  \"onlyNewSinceLastRun\": true,\n  \"stateName\": \"n8n-iimjobs-daily\",\n  \"includeDescription\": false,\n  \"maxJobsPerQuery\": 50,\n  \"maxJobs\": 100\n}",
         "options": {
           "timeout": 300000,
           "response": {
@@ -49,16 +87,13 @@
         }
       },
       "id": "http-1",
-      "name": "Run IIMJobs scraper",
+      "name": "Get new IIMJobs postings",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [260, 0],
-      "credentials": {
-        "httpHeaderAuth": {
-          "id": "REPLACE_WITH_YOUR_CREDENTIAL_ID",
-          "name": "Apify token (Header Auth: Authorization = Bearer ...)"
-        }
-      }
+      "position": [
+        240,
+        40
+      ]
     },
     {
       "parameters": {
@@ -87,18 +122,110 @@
             "postedAt": "={{ $json.postedAt }}",
             "url": "={{ $json.url }}"
           },
-          "matchingColumns": ["id"],
+          "matchingColumns": [
+            "id"
+          ],
           "schema": [
-            {"id": "id", "displayName": "id", "type": "string", "display": true, "required": false, "defaultMatch": true, "canBeUsedToMatch": true, "removed": false},
-            {"id": "title", "displayName": "title", "type": "string", "display": true, "required": false, "defaultMatch": false, "canBeUsedToMatch": true, "removed": false},
-            {"id": "company", "displayName": "company", "type": "string", "display": true, "required": false, "defaultMatch": false, "canBeUsedToMatch": true, "removed": false},
-            {"id": "locations", "displayName": "locations", "type": "string", "display": true, "required": false, "defaultMatch": false, "canBeUsedToMatch": true, "removed": false},
-            {"id": "experience", "displayName": "experience", "type": "string", "display": true, "required": false, "defaultMatch": false, "canBeUsedToMatch": true, "removed": false},
-            {"id": "salaryLpa", "displayName": "salaryLpa", "type": "string", "display": true, "required": false, "defaultMatch": false, "canBeUsedToMatch": true, "removed": false},
-            {"id": "skills", "displayName": "skills", "type": "string", "display": true, "required": false, "defaultMatch": false, "canBeUsedToMatch": true, "removed": false},
-            {"id": "applicants", "displayName": "applicants", "type": "string", "display": true, "required": false, "defaultMatch": false, "canBeUsedToMatch": true, "removed": false},
-            {"id": "postedAt", "displayName": "postedAt", "type": "string", "display": true, "required": false, "defaultMatch": false, "canBeUsedToMatch": true, "removed": false},
-            {"id": "url", "displayName": "url", "type": "string", "display": true, "required": false, "defaultMatch": false, "canBeUsedToMatch": true, "removed": false}
+            {
+              "id": "id",
+              "displayName": "id",
+              "type": "string",
+              "display": true,
+              "required": false,
+              "defaultMatch": true,
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "title",
+              "displayName": "title",
+              "type": "string",
+              "display": true,
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "company",
+              "displayName": "company",
+              "type": "string",
+              "display": true,
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "locations",
+              "displayName": "locations",
+              "type": "string",
+              "display": true,
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "experience",
+              "displayName": "experience",
+              "type": "string",
+              "display": true,
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "salaryLpa",
+              "displayName": "salaryLpa",
+              "type": "string",
+              "display": true,
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "skills",
+              "displayName": "skills",
+              "type": "string",
+              "display": true,
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "applicants",
+              "displayName": "applicants",
+              "type": "string",
+              "display": true,
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "postedAt",
+              "displayName": "postedAt",
+              "type": "string",
+              "display": true,
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "url",
+              "displayName": "url",
+              "type": "string",
+              "display": true,
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
           ],
           "attemptToConvertTypes": false,
           "convertFieldsToString": true
@@ -109,13 +236,10 @@
       "name": "Upsert jobs into Google Sheets",
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.5,
-      "position": [520, 0],
-      "credentials": {
-        "googleSheetsOAuth2Api": {
-          "id": "REPLACE_WITH_YOUR_CREDENTIAL_ID",
-          "name": "Google Sheets account"
-        }
-      }
+      "position": [
+        560,
+        40
+      ]
     },
     {
       "parameters": {
@@ -125,38 +249,57 @@
           "mode": "name",
           "value": "#jobs"
         },
-        "text": "={{ $('Run IIMJobs scraper').all().length }} IIMJobs jobs posted in the last 24h were added to the sheet.\nTop 5:\n{{ $('Run IIMJobs scraper').all().slice(0, 5).map(i => '• ' + i.json.title + ' — ' + (i.json.company?.name ?? 'confidential') + ' — ' + i.json.url).join('\\n') }}",
+        "text": "={{ $('Get new IIMJobs postings').all().length }} new IIMJobs postings were added to the sheet.\nTop 5:\n{{ $('Get new IIMJobs postings').all().slice(0, 5).map(i => '• ' + i.json.title + ' — ' + (i.json.company?.name ?? 'confidential') + ' — ' + i.json.url).join('\\n') }}",
         "otherOptions": {}
       },
       "id": "slack-1",
       "name": "Slack summary",
       "type": "n8n-nodes-base.slack",
       "typeVersion": 2.2,
-      "position": [780, 0],
-      "executeOnce": true,
-      "credentials": {
-        "slackApi": {
-          "id": "REPLACE_WITH_YOUR_CREDENTIAL_ID",
-          "name": "Slack account"
-        }
-      }
+      "position": [
+        800,
+        40
+      ],
+      "executeOnce": true
     }
   ],
   "connections": {
     "Every day 08:00": {
-      "main": [[{"node": "Run IIMJobs scraper", "type": "main", "index": 0}]]
+      "main": [
+        [
+          {
+            "node": "Get new IIMJobs postings",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
-    "Run IIMJobs scraper": {
-      "main": [[{"node": "Upsert jobs into Google Sheets", "type": "main", "index": 0}]]
+    "Get new IIMJobs postings": {
+      "main": [
+        [
+          {
+            "node": "Upsert jobs into Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
     "Upsert jobs into Google Sheets": {
-      "main": [[{"node": "Slack summary", "type": "main", "index": 0}]]
+      "main": [
+        [
+          {
+            "node": "Slack summary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "settings": {
     "executionOrder": "v1"
   },
-  "meta": {
-    "templateCredsSetupCompleted": false
-  }
+  "pinData": {}
 }
