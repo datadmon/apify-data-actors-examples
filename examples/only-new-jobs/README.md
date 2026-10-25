@@ -9,6 +9,10 @@ python only_new_jobs.py iimjobs "product manager"        # or: node only_new_job
 
 Each run calls `POST /v2/acts/{actor}/run-sync-get-dataset-items` with `postedWithinDays: 1`, then prints only jobs it has not printed before. State lives in `.state/<site>-seen.json` next to the script.
 
+## Every job on the board (IIMJobs and Hirist)
+
+Pass `*` as the keyword to follow the whole board instead of one search: `python only_new_jobs.py iimjobs "*"` (or `hirist "*"`). The actor then delivers every listing posted in the window (input field `allJobs: true` does the same). Measured on 26 October 2026: IIMJobs listed 1,199 jobs in the last 7 days (about 170 a day) and Hirist 959 (about 140 a day). The window counts calendar days in India time; the script asks for the last day, and for your own scheduled runs `postedWithinDays: 3` with only-new mode is safer (it covers weekends and late runs, and the overlap is dropped). Foundit and Instahyre search all jobs when `queries` is empty rather than `*`.
+
 ## Three ways the duplicates are removed
 
 The script reads the actor's live input schema (`GET /v2/acts/{actor}/builds/default`) and picks the best available option, so it is correct on any build:
