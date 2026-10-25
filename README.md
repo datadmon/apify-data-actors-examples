@@ -26,6 +26,16 @@ Guides and a page per API with live prices: https://datadmon.github.io/ (machine
 
 The hex id and `data_daemon/<name>` are interchangeable everywhere in the Apify API (write the name as `data_daemon~<name>` inside URLs).
 
+## Ready-to-fork templates (GitHub Actions)
+
+Complete tools you copy with **Use this template**, add an `APIFY_TOKEN` secret, and leave running:
+
+| Template | What it does |
+|---|---|
+| [india-job-alerts](https://github.com/datadmon/india-job-alerts) | New jobs from IIMJobs, Hirist, Foundit and Instahyre every morning, to a GitHub issue, Slack, Telegram, Discord or CSV. |
+| [uk-insolvency-monitor](https://github.com/datadmon/uk-insolvency-monitor) | Alert when a watchlist company appears in The Gazette (winding-up petitions, orders, administrations), matched by Companies House number. |
+| [india-ipo-gmp-tracker](https://github.com/datadmon/india-ipo-gmp-tracker) | Daily IPO GMP table with estimated listing prices and a GMP history CSV, plus Telegram alerts. |
+
 ## Quick start (SDK)
 
 ```bash
