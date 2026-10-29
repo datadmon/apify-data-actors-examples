@@ -23,6 +23,7 @@ Every actor reads a site's own JSON endpoints, so runs take seconds, need no pro
 | [Apna Jobs Scraper](https://apify.com/data_daemon/apna-jobs-scraper) | Apna (apna.co) India jobs with salary, locality, department, work mode and full descriptions; full-board export | `B2p841zTWw3MlLWxy` | [python](python/apna-jobs-scraper.py) · [node](node/apna-jobs-scraper.mjs) · [n8n](n8n/apna-jobs-scraper.json) |
 | [Shine Jobs Scraper](https://apify.com/data_daemon/shine-jobs-scraper) | Shine.com India jobs by keyword and city with full descriptions, salary range, experience, skills and industry | `q1hOetk2h2sebleR2` | [python](python/shine-jobs-scraper.py) · [node](node/shine-jobs-scraper.mjs) · [n8n](n8n/shine-jobs-scraper.json) |
 | [Unstop Scraper](https://apify.com/data_daemon/unstop-scraper) | Unstop jobs, internships, hackathons and competitions with salary or stipend, prizes, deadlines and eligibility | `g822pXuHqVz1LRaxK` | [python](python/unstop-scraper.py) · [node](node/unstop-scraper.mjs) · [n8n](n8n/unstop-scraper.json) |
+| [Gupy Jobs Scraper](https://apify.com/data_daemon/gupy-jobs-scraper) | Brazil jobs from the Gupy portal with full descriptions, city, state, workplace type and contract type | `nUNyemqHBGy9ZfzAt` | [python](python/gupy-jobs-scraper.py) · [node](node/gupy-jobs-scraper.mjs) · [n8n](n8n/gupy-jobs-scraper.json) |
 <!-- actors:end -->
 
 Guides and a page per API with live prices: https://datadmon.github.io/ (machine-readable index: https://datadmon.github.io/llms.txt).
