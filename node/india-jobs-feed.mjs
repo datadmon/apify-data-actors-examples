@@ -1,4 +1,4 @@
-// India Jobs Feed - one search across nine Indian job boards (IIMJobs, Hirist, foundit, Instahyre, Shine, Cutshort, Apna, WorkIndia, Unstop) in one schema with salary in LPA and cross-board duplicates folded
+// India Jobs Feed - one search across ten Indian job boards (Naukri, IIMJobs, Hirist, foundit, Instahyre, Shine, Cutshort, Apna, WorkIndia, Unstop) in one schema with salary in LPA and cross-board duplicates folded
 // Actor: https://apify.com/data_daemon/india-jobs-feed  (id 4i5PwMsrMLQ4GCFxH)
 // Install: npm i apify-client   |   Token: https://console.apify.com/settings/integrations
 // Plain REST alternative (no SDK): see ../examples/run-sync/run_sync.mjs

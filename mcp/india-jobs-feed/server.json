@@ -1,8 +1,8 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.datadmon/india-jobs-feed",
-  "description": "9 Indian job boards in one JSON feed: salary in LPA, experience, skills, deduped. Board prices only",
-  "title": "India Jobs Feed (Apify) - 9 Indian job boards in one search",
+  "description": "10 Indian job boards incl. Naukri in one JSON feed: salary in LPA, skills, deduped. Board prices",
+  "title": "India Jobs Feed (Apify) - 10 Indian job boards in one search",
   "repository": {
     "url": "https://github.com/datadmon/apify-data-actors-examples",
     "source": "github"
