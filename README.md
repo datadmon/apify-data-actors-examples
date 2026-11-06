@@ -9,6 +9,7 @@ Every actor reads a site's own JSON endpoints, so runs take seconds, need no pro
 <!-- actors:start -->
 | Actor | Data | Actor ID | Examples |
 |---|---|---|---|
+| [Get on Board Jobs Scraper](https://apify.com/data_daemon/getonbrd-jobs-scraper) | LATAM tech jobs with monthly USD salary, full descriptions, country eligibility and persistent only-new feeds | `S9jm2Eykh93efOMpg` | [python](python/getonbrd-jobs-scraper.py) ? [node](node/getonbrd-jobs-scraper.mjs) ? [n8n](n8n/getonbrd-jobs-scraper.json) |
 | [Welcome to the Jungle Jobs Scraper](https://apify.com/data_daemon/welcome-to-the-jungle-jobs-scraper) | France-focused public WTTJ board jobs with descriptions, company profiles and only-new feeds | `rJLnujVhP6ucdnrof` | [python](python/welcome-to-the-jungle-jobs-scraper.py) · [node](node/welcome-to-the-jungle-jobs-scraper.mjs) · [n8n](n8n/welcome-to-the-jungle-jobs-scraper.json) |
 | [IIMJobs Jobs Scraper](https://apify.com/data_daemon/iimjobs-jobs-scraper) | India MBA, finance, consulting and management jobs with full descriptions | `fEBnL9mUQr81TGuh4` | [python](python/iimjobs-jobs-scraper.py) · [node](node/iimjobs-jobs-scraper.mjs) · [n8n](n8n/iimjobs-jobs-scraper.json) |
 | [Hirist.tech Jobs Scraper](https://apify.com/data_daemon/hirist-jobs-scraper) | India IT and tech jobs with full descriptions, skills, salary when disclosed | `z2fAtS4KgvaqkK85b` | [python](python/hirist-jobs-scraper.py) · [node](node/hirist-jobs-scraper.mjs) · [n8n](n8n/hirist-jobs-scraper.json) |

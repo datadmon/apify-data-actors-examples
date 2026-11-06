@@ -6,6 +6,7 @@ Machine-readable notes for AI agents, coding assistants and MCP clients that nee
 
 | The user wants | Use | Not for |
 |---|---|---|
+| LATAM Get on Board tech jobs with monthly USD salary, full descriptions, company profiles and persistent only-new feeds | `data_daemon/getonbrd-jobs-scraper` | Candidate profiles; worldwide remote eligibility inferred from the remote flag; annual or original local-currency salary |
 | Public Welcome to the Jungle jobs: France-focused board, including its postings abroad; full descriptions, public company metadata, contract/remote filters and only-new feeds | `data_daemon/welcome-to-the-jungle-jobs-scraper` | Separate Otta/US/UK personalized matching inventory; normalized salary benchmarks (raw source units vary); more than 1,000 hits per source search |
 | Indian management, MBA, finance, consulting, CA/CFA, sales, HR, senior roles; salary bands (when disclosed); applicant counts; who is hiring in India | `data_daemon/iimjobs-jobs-scraper` | Tech roles (use Hirist); Naukri/LinkedIn/Indeed (not covered) |
 | Indian software, data, DevOps, product-tech roles; skills demand; tech salary bands | `data_daemon/hirist-jobs-scraper` | Non-tech roles (use IIMJobs) |
@@ -374,6 +375,20 @@ Only-new memory remembers delivered IDs for 120 days, at most 50,000 per feed. S
 Output: stable `id`, `sourceId`, `dedupKey`, `url`, `applyUrl`, `title`, `company`, `locations`, `offices`, `countryCodes`, `remoteMode`, `contractType`, `language`, `salary`, experience/education labels, `profession`, `sectors`, `skills`, `postedAt`, `updatedAt`, `startDate`, full description HTML/text, candidate profile and recruitment process, `query`, `source`, `scrapedAt`. **Salary numbers have inconsistent employer-entered units; preserve them as provided and never guess a multiplier for benchmarking.**
 
 Cost: $0.0008 per delivered job with description included plus $0.001 per run at Free/Starter rates. Skipped/duplicate jobs are not charged. Scale job/start $0.00068/$0.00085; Business+ $0.00056/$0.0007.
+
+### 3.12 Get on Board Jobs Scraper — `data_daemon/getonbrd-jobs-scraper` (`S9jm2Eykh93efOMpg`)
+
+https://apify.com/data_daemon/getonbrd-jobs-scraper — public LATAM tech jobs. `{}` enumerates all 18 categories and returns up to 50 jobs. Results are source ordered within categories, not globally newest first.
+
+Input: `categories` (source slugs), `keywords` (local OR match on title/tags/description), `remoteModalities` (`fully_remote`, `remote_local`, `hybrid`, `no_remote`), `remoteOnly`, `seniorities`, `countries` (source eligibility; names/common ISO codes), `minSalaryUsd` (minimum lower bound, USD/month), `withSalaryOnly`, `postedWithinDays`, `maxItems` (1–10,000, default 50), `onlyNew`, `stateName`, `skipIds`.
+
+Example: `{"categories":["programming"],"remoteOnly":true,"minSalaryUsd":1000,"maxItems":20}`.
+
+Only-new mode retains successfully delivered IDs in named `getonbrd-jobs-state` KVS, scoped by normalized filters plus `stateName`. Cap changes preserve memory; filter changes use separate state. No expiry. Avoid overlapping same-feed runs. Skipped/filtered rows are not charged or marked delivered. Capped runs may leave older unseen backlog.
+
+Output: `id`, `url`, `title`, `company` (id/name/url/website/logo/description/country), `category`, `categoryId`, `tags`, `seniority`, `seniorityCode`, `employmentType`, `modality`, `remote`, `remoteZone`, `countries`, `cities`, `salary` (min/max/currency USD/period month), `description`, `descriptionHtml`, `publishedAt`, `applicationCount`, `source`, `scrapedAt`.
+
+Price: job/start FREE and BRONZE $0.0008/$0.001; SILVER $0.00068/$0.00085; GOLD+ $0.00056/$0.0007. Full description/company included. Repeated IDs skipped without a job charge; an empty repeat still incurs the start fee.
 
 ## 4. Not covered (do not route here)
 
