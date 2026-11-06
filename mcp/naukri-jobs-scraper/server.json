@@ -16,7 +16,7 @@
       "headers": [
         {
           "name": "Authorization",
-          "description": "Apify API token as 'Bearer <APIFY_TOKEN>'. Free token at https://console.apify.com/account/integrations",
+          "description": "Required: Bearer <APIFY_TOKEN> from https://console.apify.com/settings/integrations; include the Bearer prefix.",
           "isRequired": true,
           "isSecret": true
         }

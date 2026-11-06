@@ -1,13 +1,13 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.datadmon/uk-gazette-insolvency-notices",
-  "description": "UK Gazette insolvency notices as JSON: winding-up petitions, administrations, co. no. $5/1k",
+  "description": "UK Gazette insolvency JSON: $2/1k notices + $3/1k linked details; company numbers, petitions.",
   "title": "UK Gazette Insolvency Notices (Apify) - winding-up petitions and administrations",
   "repository": {
     "url": "https://github.com/datadmon/apify-data-actors-examples",
     "source": "github"
   },
-  "version": "1.0.1",
+  "version": "1.0.2",
   "websiteUrl": "https://apify.com/data_daemon/uk-gazette-insolvency-notices",
   "remotes": [
     {
@@ -16,7 +16,7 @@
       "headers": [
         {
           "name": "Authorization",
-          "description": "Apify API token as 'Bearer <APIFY_TOKEN>'. Free token at https://console.apify.com/account/integrations",
+          "description": "Required: Bearer <APIFY_TOKEN> from https://console.apify.com/settings/integrations; include the Bearer prefix.",
           "isRequired": true,
           "isSecret": true
         }

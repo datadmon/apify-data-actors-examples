@@ -1,0 +1,17 @@
+{
+  "mcpServers": {
+    "india-jobs": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "mcp-remote@0.16.1",
+        "https://data-daemon--india-jobs-mcp.apify.actor/mcp",
+        "--header",
+        "Authorization:${AUTH_HEADER}"
+      ],
+      "env": {
+        "AUTH_HEADER": "Bearer <YOUR_APIFY_TOKEN>"
+      }
+    }
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "india-jobs": {
+      "httpUrl": "https://data-daemon--india-jobs-mcp.apify.actor/mcp",
+      "headers": {
+        "Authorization": "Bearer <YOUR_APIFY_TOKEN>"
+      },
+      "timeout": 120000
+    }
+  }
+}

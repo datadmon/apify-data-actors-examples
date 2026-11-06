@@ -1,0 +1,26 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.datadmon/india-jobs-mcp",
+  "description": "Search 10 India job boards via MCP: Naukri, IIMJobs, salary, only-new. Board fees + platform usage.",
+  "title": "India Jobs MCP (Apify) - ten Indian boards for AI agents",
+  "repository": {
+    "url": "https://github.com/datadmon/apify-data-actors-examples",
+    "source": "github"
+  },
+  "version": "1.0.1",
+  "websiteUrl": "https://apify.com/data_daemon/india-jobs-mcp",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://data-daemon--india-jobs-mcp.apify.actor/mcp",
+      "headers": [
+        {
+          "name": "Authorization",
+          "description": "Required: Bearer <APIFY_TOKEN> from https://console.apify.com/settings/integrations; include the Bearer prefix.",
+          "isRequired": true,
+          "isSecret": true
+        }
+      ]
+    }
+  ]
+}

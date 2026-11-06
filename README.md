@@ -4,6 +4,12 @@ Ready-to-run **Python, Node.js, curl and n8n** examples for the [Daemon Data](ht
 
 Every actor reads a site's own JSON endpoints, so runs take seconds, need no proxy or login, and you pay per record returned (compute is included).
 
+## India Jobs MCP client setup
+
+[India Jobs MCP](https://apify.com/data_daemon/india-jobs-mcp) gives agents five tools across ten Indian boards.
+Use the [tested Claude Desktop/Code, Cursor and Gemini CLI configs](mcp/india-jobs-mcp/README.md), including
+Bearer-header setup and a discovery-only connection check. Board searches charge your own Apify account.
+
 ## Actors
 
 <!-- actors:start -->

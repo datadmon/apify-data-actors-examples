@@ -1,13 +1,13 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.datadmon/india-ipo-tracker",
-  "description": "India IPO data as JSON: live GMP, QIB/NII/retail subscription, calendar, listing gains. $3/1k",
+  "description": "India IPO GMP/subscription JSON: $3/1k report rows; optional IPO details $15/1k extra.",
   "title": "India IPO Tracker (Apify) - live GMP, subscription, calendar",
   "repository": {
     "url": "https://github.com/datadmon/apify-data-actors-examples",
     "source": "github"
   },
-  "version": "1.0.1",
+  "version": "1.0.2",
   "websiteUrl": "https://apify.com/data_daemon/india-ipo-tracker",
   "remotes": [
     {
@@ -16,7 +16,7 @@
       "headers": [
         {
           "name": "Authorization",
-          "description": "Apify API token as 'Bearer <APIFY_TOKEN>'. Free token at https://console.apify.com/account/integrations",
+          "description": "Required: Bearer <APIFY_TOKEN> from https://console.apify.com/settings/integrations; include the Bearer prefix.",
           "isRequired": true,
           "isSecret": true
         }

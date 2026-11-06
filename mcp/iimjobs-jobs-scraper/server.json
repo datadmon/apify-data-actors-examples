@@ -1,13 +1,13 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.datadmon/iimjobs-jobs-scraper",
-  "description": "IIMJobs India MBA, finance & management jobs as JSON: full JD, salary, applicants. $2/1k",
+  "description": "IIMJobs MBA/finance jobs JSON, full JD. $2/1k + $0.001/run. Apify Bearer token required.",
   "title": "IIMJobs Jobs Scraper (Apify) - India MBA, finance & management jobs",
   "repository": {
     "url": "https://github.com/datadmon/apify-data-actors-examples",
     "source": "github"
   },
-  "version": "1.0.1",
+  "version": "1.0.2",
   "websiteUrl": "https://apify.com/data_daemon/iimjobs-jobs-scraper",
   "remotes": [
     {
@@ -16,7 +16,7 @@
       "headers": [
         {
           "name": "Authorization",
-          "description": "Apify API token as 'Bearer <APIFY_TOKEN>'. Free token at https://console.apify.com/account/integrations",
+          "description": "Required: Bearer <APIFY_TOKEN> from https://console.apify.com/settings/integrations; include the Bearer prefix.",
           "isRequired": true,
           "isSecret": true
         }
