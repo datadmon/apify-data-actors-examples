@@ -1,0 +1,26 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.datadmon/bse-corporate-announcements",
+  "description": "BSE India filings as JSON: announcements, ex-dates, board meetings, result dates, deals. $3/1k",
+  "title": "BSE Corporate Announcements (Apify) - BSE India filings, corporate actions, bulk and block deals",
+  "repository": {
+    "url": "https://github.com/datadmon/apify-data-actors-examples",
+    "source": "github"
+  },
+  "version": "1.0.1",
+  "websiteUrl": "https://apify.com/data_daemon/bse-corporate-announcements",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://mcp.apify.com/?tools=data_daemon/bse-corporate-announcements",
+      "headers": [
+        {
+          "name": "Authorization",
+          "description": "Apify API token as 'Bearer <APIFY_TOKEN>'. Free token at https://console.apify.com/account/integrations",
+          "isRequired": true,
+          "isSecret": true
+        }
+      ]
+    }
+  ]
+}
