@@ -1,0 +1,26 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.datadmon/abu-dhabi-property-transactions",
+  "description": "Abu Dhabi property sales since 2019 as JSON: AED price, price/sqm, district, project. $1/1k",
+  "title": "Abu Dhabi Property Transactions (Apify) - ADREC sold prices since 2019",
+  "repository": {
+    "url": "https://github.com/datadmon/apify-data-actors-examples",
+    "source": "github"
+  },
+  "version": "1.0.1",
+  "websiteUrl": "https://apify.com/data_daemon/abu-dhabi-property-transactions",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://mcp.apify.com/?tools=data_daemon/abu-dhabi-property-transactions",
+      "headers": [
+        {
+          "name": "Authorization",
+          "description": "Apify API token as 'Bearer <APIFY_TOKEN>'. Free token at https://console.apify.com/account/integrations",
+          "isRequired": true,
+          "isSecret": true
+        }
+      ]
+    }
+  ]
+}
