@@ -1,0 +1,26 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.datadmon/hkex-news-filings",
+  "description": "HKEX announcements, director dealings and CCASS holdings as JSON. $3/1k filings, $1/1k CCASS rows",
+  "title": "HKEX News (Apify) - Hong Kong announcements, director dealings, CCASS shareholding",
+  "repository": {
+    "url": "https://github.com/datadmon/apify-data-actors-examples",
+    "source": "github"
+  },
+  "version": "1.0.1",
+  "websiteUrl": "https://apify.com/data_daemon/hkex-news-filings",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://mcp.apify.com/?tools=data_daemon/hkex-news-filings",
+      "headers": [
+        {
+          "name": "Authorization",
+          "description": "Apify API token as 'Bearer <APIFY_TOKEN>'. Free token at https://console.apify.com/account/integrations",
+          "isRequired": true,
+          "isSecret": true
+        }
+      ]
+    }
+  ]
+}
