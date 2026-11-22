@@ -6,6 +6,8 @@ Machine-readable notes for AI agents, coding assistants and MCP clients that nee
 
 | The user wants | Use | Not for |
 |---|---|---|
+| Run their own Python (pandas, numpy) or DuckDB SQL on rows from a JSON array or an Apify Dataset; post-process another Actor's results; a Python or SQL step for n8n, Make or Zapier; errors returned as a data row | `data_daemon/python-code-runner` | Jobs over 15 minutes, GPU work, code that needs the run's Apify token (it is withheld from the code on purpose) |
+| Company name to official domain and website with a confidence score and alternatives; domain to the company's LinkedIn page and social profiles; bulk lead-list or CRM enrichment | `data_daemon/company-domain-finder` | People, e-mail addresses or phone numbers; small local businesses that appear in no public company index |
 | LATAM Get on Board tech jobs with monthly USD salary, full descriptions, company profiles and persistent only-new feeds | `data_daemon/getonbrd-jobs-scraper` | Candidate profiles; worldwide remote eligibility inferred from the remote flag; annual or original local-currency salary |
 | Public Welcome to the Jungle jobs: France-focused board, including its postings abroad; full descriptions, public company metadata, contract/remote filters and only-new feeds | `data_daemon/welcome-to-the-jungle-jobs-scraper` | Separate Otta/US/UK personalized matching inventory; normalized salary benchmarks (raw source units vary); more than 1,000 hits per source search |
 | Indian management, MBA, finance, consulting, CA/CFA, sales, HR, senior roles; salary bands (when disclosed); applicant counts; who is hiring in India | `data_daemon/iimjobs-jobs-scraper` | Tech roles (use Hirist); Naukri/LinkedIn/Indeed (not covered) |
